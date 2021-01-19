@@ -1,0 +1,38 @@
+package main
+
+import (
+	"github.com/ahmadrezamusthafa/logwatcher/common/di/container"
+	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
+	"github.com/ahmadrezamusthafa/logwatcher/config"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/breaker"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/database"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/worker"
+	"github.com/ahmadrezamusthafa/logwatcher/server"
+	httphealth "github.com/ahmadrezamusthafa/logwatcher/server/http/health"
+)
+
+func main() {
+	logger.SetupLoggerAuto("", "")
+
+	conf, err := config.New()
+	if err != nil {
+		logger.Warn("%v", err)
+	}
+
+	logger.Info("Starting service registry...")
+	registry := container.NewContainer()
+	registry.RegisterService("config", *conf)
+	registry.RegisterService("worker", new(worker.EngineWorker))
+	registry.RegisterService("database", new(database.EngineDatabase))
+	registry.RegisterService("breaker", new(breaker.EngineBreaker))
+	registry.RegisterService("healthHandler", new(httphealth.Handler))
+	rootHandler := new(server.RootHandler)
+	registry.RegisterService("rootHandler", rootHandler)
+
+	if err := registry.Ready(); err != nil {
+		logger.Fatal("Failed to populate services %v", err)
+	}
+
+	h := server.HttpServer{Config: *conf, RootHandler: rootHandler}
+	h.Serve()
+}

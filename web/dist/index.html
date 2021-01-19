@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Log Watcher</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css" type="text/css">
+    <link rel="stylesheet" href="assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+    <link rel="stylesheet" href="assets/css/argon.css?v=1.2.0" type="text/css">
+<body>
+<div>
+    <div class="header bg-gradient-blue pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">LOG Watcher</h6>
+                    </div>
+                </div>
+                <!-- Card stats -->
+                <div class="row align-items-center">
+                    <div class="col-xl-1 col-md-4">
+                        <div class="form-group">
+                            <label style="color: white" for="example-datetime-local-input" class="form-control-label">Service</label>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>ASIPCNT</option>
+                                <option>ASIPSRC</option>
+                                <option>ASIPRSV</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-md-4">
+                        <div class="form-group">
+                            <label style="color: white" for="example-datetime-local-input" class="form-control-label">Query</label>
+                            <input type="text" class="form-control" placeholder="Default input">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-4">
+                        <div class="form-group">
+                            <label style="color: white" for="example-datetime-local-input" class="form-control-label">Start
+                                time</label>
+                            <input class="form-control" type="datetime-local" value="2018-11-23T10:30:00"
+                                   id="example-datetime-local-input">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-4">
+                        <div class="form-group">
+                            <label style="color: white" for="example-datetime-local-input" class="form-control-label">End
+                                time</label>
+                            <input class="form-control" type="datetime-local" value="2018-11-23T10:30:00"
+                                   id="example-datetime-local-input">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <br/>
+        <div class="table-responsive">
+            <span id="error"></span>
+            <div id="dynamicTable">
+            </div>
+        </div>
+        <br/>
+        <div align="center">
+            <button type="button" id="btn-new-group" name="new-group" class="btn btn-info">Add Query Context Group</button>
+            <button type="button" id="btn-search" name="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div style="width: auto; margin: 0 0;">
+        <div class="content-block">
+            <div class="block-content">
+
+                <table id="tableResult" class="table table-striped table-bordered table-horizontal-scroll">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">Timestamp</th>
+                        <th rowspan="2">Hostname</th>
+                        <th rowspan="2">Flow ID</th>
+                        <th rowspan="2">Type</th>
+                        <th rowspan="2">Part</th>
+                        <th rowspan="2">Message</th>
+                        <th rowspan="2">Context</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="function.js"></script>
+<script>
+    $(function () {
+        $("#btn-search").click(function (e) {
+            e.preventDefault();
+            var error = '';
+            $('.item_name').each(function () {
+                var count = 1;
+                if ($(this).val() == '') {
+                    error += "<p>Enter Item Name at " + count + " Row</p>";
+                    return false;
+                }
+                count = count + 1;
+            });
+
+            $('.item_quantity').each(function () {
+                var count = 1;
+                if ($(this).val() == '') {
+                    error += "<p>Enter Item Quantity at " + count + " Row</p>";
+                    return false;
+                }
+                count = count + 1;
+            });
+
+            $('.item_unit').each(function () {
+                var count = 1;
+                if ($(this).val() == '') {
+                    error += "<p>Select Unit at " + count + " Row</p>";
+                    return false;
+                }
+                count = count + 1;
+            });
+            var form_data = $(this).serialize();
+            if (error == '') {
+                $.ajax({
+                    url: "insert.php",
+                    method: "POST",
+                    data: form_data,
+                    success: function (data) {
+                        if (data == 'ok') {
+                            $('#item_table').find("tr:gt(0)").remove();
+                            $('#error').html('<div class="alert alert-success">Item Details Saved</div>');
+                        }
+                    }
+                });
+            } else {
+                $('#error').html('<div class="alert alert-danger">' + error + '</div>');
+            }
+        });
+
+        $("#btn-new-group").click(function (e) {
+            e.preventDefault();
+            console.log("sdsdsd");
+            var $table = $('<table class="table table-bordered" id="item_table">');
+            var $tbody = $table.append('<tbody />').children('tbody');
+
+            $tbody.append('<tr />').children('tr:last')
+                .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-danger btn-sm remove_group\"><span class=\"glyphicon glyphicon-minus\"></span></button></th>")
+                .append("<th><select name=\"item_logical_operator[]\" class=\"form-control item_logical_operator\"><option value=\"1\"  selected=\"selected\">AND</option>\\n' +\n" +
+                    "'<option value=\"2\">OR</option></select></th>")
+                .append("<th>Logical</th>")
+                .append("<th>Attribute</th>")
+                .append("<th>Operator</th>")
+                .append("<th>Value</th>")
+                .append("<th><button type=\"button\" name=\"add\" class=\"btn btn-success btn-sm add\"><span class=\"glyphicon glyphicon-plus\"></span> Add attribute</button></th>")
+            $tbody.append('<tr />').children('tr:last');
+
+            $table.on('click', '.add', function () {
+                var html = '';
+                html += '<tr>';
+                html += '<td></td>';
+                html += '<td></td>';
+                html += '<td><select name="item_logical_operator[]" class="form-control item_logical_operator"><option value="1"  selected="selected">AND</option>\n' +
+                    '<option value="2">OR</option></select></td>';
+                html += '<td><select name="item_attribute[]" class="form-control item_attribute"><option value="0"  selected="selected">Select Attribute</option>\n' +
+                    '<option value="1">Provider Hotel ID</option></select></td>';
+                html += '<td><select name="item_operator[]" class="form-control item_operator"><option value="1"  selected="selected">Equal</option>\n' +
+                    '<option value="2">Start with</option><option value="3">End with</option><option value="4">Like</option></select></td>';
+                html += '<td><input type="text" name="item_value[]" class="form-control item_value" /></td>';
+                html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                $table.append(html);
+            });
+
+            $table.on('click', '.remove', function () {
+                $(this).closest('tr').remove();
+            });
+
+            $table.on('click', '.remove_group', function () {
+                $table.remove();
+            });
+
+            $table.appendTo('#dynamicTable');
+        });
+    });
+
+</script>

@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5
+	github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210120055745-9e36e6b38739
 	github.com/aws/aws-sdk-go v1.31.11
 	github.com/eapache/go-resiliency v1.2.0
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
@@ -20,7 +21,7 @@ require (
 	github.com/json-iterator/go v1.1.10
 	github.com/justinas/alice v0.0.0-20160910103822-1051eaf52fca
 	github.com/lib/pq v1.1.1 // indirect
-	github.com/mattn/go-sqlite3 v1.14.0
+	github.com/mattn/go-sqlite3 v1.14.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/newrelic/go-agent v2.7.0+incompatible
 	github.com/satori/go.uuid v1.2.0

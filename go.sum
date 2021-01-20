@@ -6,6 +6,8 @@ github.com/DATA-DOG/go-sqlmock v1.4.1/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5 h1:DA3VaMYgMPGzlKWvKOHjo2sKF6qSPG17O1188vLB/jc=
 github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5/go.mod h1:cDLGBht23g0XQdLjzn6xOGXDkLK182YfINAaZEQLCHQ=
+github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210120055745-9e36e6b38739 h1:N/8mnxVSUpo4blENOXmW5JuQjfmshr+sz+WP+SReoSg=
+github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210120055745-9e36e6b38739/go.mod h1:YBNbTqWYdY0JZKh70rPTRQ/FPgBD9/eDQM9LPOlzDvc=
 github.com/andybalholm/cascadia v1.1.0/go.mod h1:GsXiBklL0woXo1j/WYWtSYYC4ouU9PqHO0sqidkEA4Y=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a h1:idn718Q4B6AGu/h5Sxe66HYVdqdGu2l9Iebqhi/AEoA=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=

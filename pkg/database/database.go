@@ -103,8 +103,12 @@ func (m *EngineDatabase) StartUp() {
 
 	db, err := sql.Open(athenadriver.DriverName, athenaConf.Stringify())
 	var timestamp string
-	row := db.QueryRow(`SELECT timestamp from "s3log"."pcntapirqrs_init" limit 1`).Scan(&timestamp)
-	println(row)
+	if db != nil {
+		row := db.QueryRow(`SELECT timestamp from "s3log"."pcntapirqrs_init" limit 1`).Scan(&timestamp)
+		if row != nil {
+			println(row.Error())
+		}
+	}
 	if err != nil {
 		logger.Warn("Failed to connect [%s]", info)
 	} else if err := db.Ping(); err != nil {

@@ -5,6 +5,7 @@ import (
 	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
 	"github.com/ahmadrezamusthafa/logwatcher/config"
 	"github.com/ahmadrezamusthafa/logwatcher/server/http/health"
+	"github.com/ahmadrezamusthafa/logwatcher/server/http/thirdparty"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
@@ -18,7 +19,8 @@ type HttpServer struct {
 }
 
 type RootHandler struct {
-	Health *health.Handler `inject:"healthHandler"`
+	Health     *health.Handler     `inject:"healthHandler"`
+	ThirdParty *thirdparty.Handler `inject:"thirdPartyHandler"`
 }
 
 func (svr *HttpServer) Serve() {
@@ -41,6 +43,10 @@ func createRouter(rh *RootHandler) *gin.Engine {
 
 	router.Use(static.Serve("/", static.LocalFile("./web/dist", true)))
 	router.GET("/health", rh.Health.HealthCheck)
+
+	router.POST("/generate_query", rh.ThirdParty.GenerateQuery)
+	router.POST("/query", rh.ThirdParty.Query)
+	router.GET("/attributes", rh.ThirdParty.GetLogAttributes)
 
 	return router
 }

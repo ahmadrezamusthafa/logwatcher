@@ -25,19 +25,22 @@ func (svc *Service) GetLogAttributes(ctx context.Context) (attributes []LogAttri
 	return attributes, nil
 }
 
-func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query QueryInput) (string, error) {
+func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query QueryInput) (generated string, err error) {
 	baseConditions := []*types.Condition{}
 	queryContexts := []*types.Condition{}
+	condition := types.Condition{
+		Conditions: []*types.Condition{},
+	}
 	if query.ContextQuery != "" {
-		condition, err := multigenerator.GenerateCondition(query.ContextQuery)
+		condition, err = multigenerator.GenerateCondition(query.ContextQuery)
 		if err != nil {
 			return "", errors.AddTrace(err)
 		}
-		queryContexts = append(queryContexts, &condition)
 	}
 	if query.MessageQuery != "" {
-		queryContexts = append(queryContexts, parseMessageQuery(query.MessageQuery)...)
+		condition.Conditions = append(condition.Conditions, parseMessageQuery(query.MessageQuery)...)
 	}
+	queryContexts = append(queryContexts, &condition)
 	baseConditions = append(baseConditions, queryContexts...)
 	baseCondition := types.BaseCondition{
 		Conditions: baseConditions,

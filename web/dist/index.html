@@ -313,7 +313,7 @@
         }
         var param = new Object();
         param.service = $('#option-service-input').val();
-        param.message_query = $('#text-message-input').val();
+        param.message_query = $('#text-message-input').val().trim();
         param.context_query = contextQuery;
 
         $('#generated-query-input').val("");

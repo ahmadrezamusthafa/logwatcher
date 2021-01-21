@@ -1,34 +1,34 @@
 [
   {
-    "attribute": "correlationid",
+    "attribute": "context.correlationid",
     "name": "Corelation ID"
   },
   {
-    "attribute": "event",
+    "attribute": "context.event",
     "name": "Event"
   },
   {
-    "attribute": "uri",
+    "attribute": "context.uri",
     "name": "URI"
   },
   {
-    "attribute": "providerid",
+    "attribute": "context.providerid",
     "name": "Provider ID"
   },
   {
-    "attribute": "providerhotelid",
+    "attribute": "context.providerhotelid",
     "name": "Provider Hotel ID"
   },
   {
-    "attribute": "locale",
+    "attribute": "context.locale",
     "name": "Locale"
   },
   {
-    "attribute": "providerbrandid",
+    "attribute": "context.providerbrandid",
     "name": "Provider Brand ID"
   },
   {
-    "attribute": "providerchainid",
+    "attribute": "context.providerchainid",
     "name": "Provider Chain ID"
   }
 ]

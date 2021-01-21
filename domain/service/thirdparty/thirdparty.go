@@ -53,14 +53,25 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	return generatedQuery, nil
 }
 
-func (svc *Service) Query(ctx context.Context, serviceCode string, query QueryInput) error {
+func (svc *Service) Query(ctx context.Context, serviceCode string, query QueryInput) (outputs []QueryOutput, err error) {
 	generatedQuery, err := svc.GenerateQuery(ctx, serviceCode, query)
 	if err != nil {
-		return errors.AddTrace(err)
+		return outputs, errors.AddTrace(err)
 	}
-	//TODO: exec query to athena
 	fmt.Println(generatedQuery)
-	return nil
+	rows, err := svc.DB.GetDB().Query(generatedQuery)
+	if err != nil {
+		return outputs, errors.AddTrace(err)
+	}
+	for rows.Next() {
+		row := QueryOutput{}
+		err = rows.Scan(&row.Timestamp, &row.Message, &row.FlowID, &row.Type, &row.Hostname, &row.Part)
+		if err != nil {
+			return outputs, errors.AddTrace(err)
+		}
+		outputs = append(outputs, row)
+	}
+	return outputs, nil
 }
 
 func parseMessageQuery(message string) []*types.Condition {

@@ -138,7 +138,7 @@
     var attributes;
     var attributeHtml;
     $(document).ready(function () {
-        $('input[type=datetime-local]').val(new Date().toJSON().slice(0, 19));
+        $('input[type=datetime-local]').val(new Date().toJSON().slice(0, 16));
 
         populateAttribute();
     });
@@ -222,14 +222,14 @@
     }
 
     function buildQuery() {
-        var startTimestamp = $('#start-datetime-input').val().replace("T", " ");
-        var endTimestamp = $('#end-datetime-input').val().replace("T", " ");
+        var startTimestamp = $('#start-datetime-input').val();
+        var endTimestamp = $('#end-datetime-input').val();
 
         console.log(startTimestamp);
         console.log(endTimestamp);
 
-        var starts = startTimestamp.split(" ");
-        var ends = endTimestamp.split(" ");
+        var starts = startTimestamp.split("T");
+        var ends = endTimestamp.split("T");
 
         var startDate, endDate;
         var startTime, endTime;

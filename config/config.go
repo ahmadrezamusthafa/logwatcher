@@ -10,15 +10,12 @@ import (
 )
 
 type Config struct {
-	GrpcPort                string        `envconfig:"default=9504"`
 	HttpPort                string        `envconfig:"default=9505"`
 	APIHost                 string        `envconfig:"default=http://api.com"`
 	BreakerErrorThreshold   int           `envconfig:"default=3"`
 	BreakerSuccessThreshold int           `envconfig:"default=3"`
 	BreakerTimeout          time.Duration `envconfig:"default=15s"`
 	HttpClientTimeout       time.Duration `envconfig:"default=15s"`
-	DatabaseFile            string        `envconfig:"default=logwatcher.db"`
-	SecretKey               string        `envconfig:"default=mnNska26ajAS2smnNska26ajAS2sVcE3"`
 	MaxWorkerPool           int           `envconfig:"default=100"`
 }
 

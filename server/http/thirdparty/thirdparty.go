@@ -106,10 +106,10 @@ func (h *Handler) Query(c *gin.Context) {
 		MessageQuery: param.MessageQuery,
 		ContextQuery: param.ContextQuery,
 	}
-	err = h.ThirdPartyService.Query(ctx, param.Service, queryInput)
+	output, err := h.ThirdPartyService.Query(ctx, param.Service, queryInput)
 	if err != nil {
 		err = errors.AddTrace(err)
 		return
 	}
-	respWriter.SuccessWriter(w, http.StatusOK, nil)
+	respWriter.SuccessWriter(w, http.StatusOK, output)
 }

@@ -101,6 +101,8 @@ github.com/json-iterator/go v1.1.10 h1:Kz6Cvnvv2wGdaG/V8yMvfkmNiXq9Ya2KUv4rouJJr
 github.com/json-iterator/go v1.1.10/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/justinas/alice v0.0.0-20160910103822-1051eaf52fca h1:xI08OYkay8GUWM+KukP7RodNgkaBCgwQptWfuO8cX70=
 github.com/justinas/alice v0.0.0-20160910103822-1051eaf52fca/go.mod h1:oLH0CmIaxCGXD67VKGR5AacGXZSMznlmeqM8RzPrcY8=
+github.com/keegancsmith/sqlf v1.1.0 h1:lQ2YFRqdEyjDZ/OHsh417gs/2Fz+Jc7qEM7kRrc3ofw=
+github.com/keegancsmith/sqlf v1.1.0/go.mod h1:p1owj38vs/HG0UcZlyhFnXA57SgHejZiHGJBj6XWPxo=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=

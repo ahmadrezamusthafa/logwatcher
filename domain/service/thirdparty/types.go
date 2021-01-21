@@ -6,6 +6,6 @@ type QueryInput struct {
 }
 
 type LogAttribute struct {
-	Attribute string
-	Name      string
+	Attribute string `json:"attribute"`
+	Name      string `json:"name"`
 }

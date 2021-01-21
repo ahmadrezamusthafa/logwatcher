@@ -40,18 +40,13 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	}
 	baseConditions = append(baseConditions, queryContexts...)
 	baseCondition := types.BaseCondition{
-		Conditions: []*types.Condition{
-			{
-				Conditions: baseConditions,
-			},
-		},
+		Conditions: baseConditions,
 	}
 	svcName := ServiceName(serviceCode)
 	generatedQuery, err := multigenerator.GenerateQuery(svcName.GetBaseQuery(), baseCondition)
 	if err != nil {
 		return "", errors.AddTrace(err)
 	}
-	fmt.Println(generatedQuery)
 	return generatedQuery, nil
 }
 
@@ -82,6 +77,7 @@ func parseMessageQuery(message string) []*types.Condition {
 func getTokenAttributes(query string) []*types.TokenAttribute {
 	var tokenAttributes []*types.TokenAttribute
 	buffer := &bytes.Buffer{}
+	isQuoteFound := false
 	isOpenQuote := false
 	for _, char := range query {
 		switch char {
@@ -92,15 +88,19 @@ func getTokenAttributes(query string) []*types.TokenAttribute {
 				buffer.WriteRune(char)
 			}
 		case '"':
+			isQuoteFound = true
 			isOpenQuote = !isOpenQuote
 		default:
 			buffer.WriteRune(char)
 		}
-		if !isOpenQuote {
+		if !isOpenQuote && isQuoteFound {
 			if buffer.Len() > 0 {
 				tokenAttributes = appendAttribute(tokenAttributes, buffer, buffer.String())
 			}
 		}
+	}
+	if len(tokenAttributes) == 0 {
+		tokenAttributes = appendAttribute(tokenAttributes, buffer, query)
 	}
 	return tokenAttributes
 }

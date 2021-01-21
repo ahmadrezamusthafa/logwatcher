@@ -2,15 +2,21 @@
 <html lang="en">
 <head>
     <title>Log Watcher</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="assets/css/sweetalert.css">
     <link rel="stylesheet" href="assets/vendor/nucleo/css/nucleo.css" type="text/css">
     <link rel="stylesheet" href="assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
     <link rel="stylesheet" href="assets/css/argon.css?v=1.2.0" type="text/css">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+
 <body>
 <div>
-    <div class="header bg-gradient-blue pb-6">
+    <div class="header bg-gradient-blue pb-1">
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-4">
@@ -23,7 +29,7 @@
                     <div class="col-xl-1 col-md-4">
                         <div class="form-group">
                             <label style="color: white" for="example-datetime-local-input" class="form-control-label">Service</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select class="form-control form-control-sm" id="option-service-input">
                                 <option>ASIPCNT</option>
                                 <option>ASIPSRC</option>
                                 <option>ASIPRSV</option>
@@ -33,114 +39,158 @@
                     <div class="col-xl-5 col-md-4">
                         <div class="form-group">
                             <label style="color: white" for="example-datetime-local-input" class="form-control-label">Query</label>
-                            <input type="text" class="form-control" placeholder="Default input">
+                            <input id="text-message-input" type="text" class="form-control form-control-sm"
+                                   placeholder="Message query">
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-4">
+                    <div class="col-xl-2 col-md-4">
                         <div class="form-group">
                             <label style="color: white" for="example-datetime-local-input" class="form-control-label">Start
                                 time</label>
-                            <input class="form-control" type="datetime-local" value="2018-11-23T10:30:00"
-                                   id="example-datetime-local-input">
+                            <input class="form-control form-control-sm" type="datetime-local"
+                                   value="2018-11-23T10:30:00"
+                                   id="start-datetime-input">
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-4">
+                    <div class="col-xl-2 col-md-4">
                         <div class="form-group">
                             <label style="color: white" for="example-datetime-local-input" class="form-control-label">End
                                 time</label>
-                            <input class="form-control" type="datetime-local" value="2018-11-23T10:30:00"
-                                   id="example-datetime-local-input">
+                            <input class="form-control form-control-sm" type="datetime-local"
+                                   value="2018-11-23T10:30:00"
+                                   id="end-datetime-input">
                         </div>
                     </div>
-
+                    <div class="col-xl-2 col-md-4">
+                        <div class="form-group">
+                            <label style="color: white" for="example-datetime-local-input"
+                                   class="form-control-label"> </label>
+                            <button class="btn btn-outline-white btn-block" type="button" id="btn-search" name="submit">
+                                <span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+                                <span class="btn-inner--text">Search</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <br/>
-        <div class="table-responsive">
-            <span id="error"></span>
-            <div id="dynamicTable">
+    <div class="pb-4">
+        <div class="container-sm">
+            <br>
+            <div class="table-responsive">
+                <span id="error"></span>
+                <div id="dynamicTable">
+                </div>
+            </div>
+            <div align="center" style="margin-top: 30px;margin-bottom: 40px">
+                <button type="button" id="btn-new-group" name="new-group" class="btn btn-info btn-sm">Add Query Context
+                    Group
+                </button>
+                <button type="button" id="btn-generate-query" name="generate-query" class="btn btn-dark btn-sm">Generate
+                    Query
+                </button>
             </div>
         </div>
-        <br/>
-        <div align="center">
-            <button type="button" id="btn-new-group" name="new-group" class="btn btn-info">Add Query Context Group</button>
-            <button type="button" id="btn-search" name="submit" class="btn btn-primary">Search</button>
-        </div>
-    </div>
-    <br/>
-    <br/>
-    <div style="width: auto; margin: 0 0;">
-        <div class="content-block">
-            <div class="block-content">
+        <div style="width: auto; margin: 0 0;">
+            <div class="content-block">
+                <div class="block-content">
 
-                <table id="tableResult" class="table table-striped table-bordered table-horizontal-scroll">
-                    <thead>
-                    <tr>
-                        <th rowspan="2">Timestamp</th>
-                        <th rowspan="2">Hostname</th>
-                        <th rowspan="2">Flow ID</th>
-                        <th rowspan="2">Type</th>
-                        <th rowspan="2">Part</th>
-                        <th rowspan="2">Message</th>
-                        <th rowspan="2">Context</th>
-                    </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                    <table id="tableResult" class="table table-striped table-bordered table-horizontal-scroll">
+                        <thead>
+                        <tr>
+                            <th rowspan="2">Timestamp</th>
+                            <th rowspan="2">Hostname</th>
+                            <th rowspan="2">Flow ID</th>
+                            <th rowspan="2">Type</th>
+                            <th rowspan="2">Part</th>
+                            <th rowspan="2">Message</th>
+                            <th rowspan="2">Context</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+             aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-default">Generated Query</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="font-size: 14px; font-family: monospace"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
 </body>
 </html>
 
 <script src="function.js"></script>
 <script>
+    var attributes;
+    $(document).ready(function () {
+        populateAttribute();
+    });
+
     $(function () {
         $("#btn-search").click(function (e) {
             e.preventDefault();
-            var error = '';
-            $('.item_name').each(function () {
-                var count = 1;
-                if ($(this).val() == '') {
-                    error += "<p>Enter Item Name at " + count + " Row</p>";
-                    return false;
-                }
-                count = count + 1;
-            });
-
-            $('.item_quantity').each(function () {
-                var count = 1;
-                if ($(this).val() == '') {
-                    error += "<p>Enter Item Quantity at " + count + " Row</p>";
-                    return false;
-                }
-                count = count + 1;
-            });
-
-            $('.item_unit').each(function () {
-                var count = 1;
-                if ($(this).val() == '') {
-                    error += "<p>Select Unit at " + count + " Row</p>";
-                    return false;
-                }
-                count = count + 1;
-            });
+            var error = validateForm();
             var form_data = $(this).serialize();
-            if (error == '') {
-                $.ajax({
-                    url: "insert.php",
-                    method: "POST",
-                    data: form_data,
-                    success: function (data) {
-                        if (data == 'ok') {
-                            $('#item_table').find("tr:gt(0)").remove();
-                            $('#error').html('<div class="alert alert-success">Item Details Saved</div>');
+            if (error === '') {
+                $('#error').html('<div class=""></div>');
+                generateQuery();
+            } else {
+                $('#error').html('<div class="alert alert-danger">' + error + '</div>');
+            }
+        });
+
+        $("#btn-generate-query").click(function (e) {
+            e.preventDefault();
+            var error = validateForm();
+            if (error === '') {
+                $('#error').html('<div class=""></div>');
+
+                var contextQuery = [];
+                var isFirstGroup = true;
+                $('.item_table').each(function () {
+                    var groupLogicalOperator = $(this).find('th .item_group_logical_operator').val();
+                    var isContain = false;
+                    var isFirst = true;
+                    var combination = "";
+                    $(this).find('tr').each(function (i, row) {
+                        var itemLogicalOperator = $(row).find('.item_logical_operator').val();
+                        var itemAttribute = $(row).find('.item_attribute').val();
+                        var itemOperator = $(row).find('.item_operator').val();
+                        var itemValue = $(row).find('.item_value').val();
+                        if (!isFirst) {
+                            combination += " " + itemLogicalOperator;
                         }
+                        combination += " " + itemAttribute + itemOperator + itemValue;
+                        isContain = true;
+                        isFirst = false;
+                    });
+
+                    if (isContain) {
+                        if (!isFirstGroup) {
+                            contextQuery.push(groupLogicalOperator);
+                        }
+                        contextQuery.push("(", combination, ")");
                     }
+                    isFirstGroup = false;
                 });
+
+                var query = contextQuery.join(" ");
+                console.log("QUERY = " + query);
+                generateQuery(query);
             } else {
                 $('#error').html('<div class="alert alert-danger">' + error + '</div>');
             }
@@ -148,35 +198,38 @@
 
         $("#btn-new-group").click(function (e) {
             e.preventDefault();
-            console.log("sdsdsd");
-            var $table = $('<table class="table table-bordered" id="item_table">');
+            var $table = $('<table class="table table-bordered item_table" id="item_table[]">');
             var $tbody = $table.append('<tbody />').children('tbody');
 
-            $tbody.append('<tr />').children('tr:last')
-                .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-danger btn-sm remove_group\"><span class=\"glyphicon glyphicon-minus\"></span></button></th>")
-                .append("<th><select name=\"item_logical_operator[]\" class=\"form-control item_logical_operator\"><option value=\"1\"  selected=\"selected\">AND</option>\\n' +\n" +
-                    "'<option value=\"2\">OR</option></select></th>")
+            $tbody
+                .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-danger btn-sm remove_group\"><span class=\"btn-inner--icon\"><i class=\"ni ni-fat-delete\"></i></span></button></th>")
+                .append("<th><select name=\"item_group_logical_operator[]\" class=\"form-control form-control-sm item_group_logical_operator\"><option value=\"&&\"  selected=\"selected\">AND</option>\\n' +\n" +
+                    "'<option value=\"||\">OR</option></select></th>")
                 .append("<th>Logical</th>")
                 .append("<th>Attribute</th>")
                 .append("<th>Operator</th>")
                 .append("<th>Value</th>")
-                .append("<th><button type=\"button\" name=\"add\" class=\"btn btn-success btn-sm add\"><span class=\"glyphicon glyphicon-plus\"></span> Add attribute</button></th>")
-            $tbody.append('<tr />').children('tr:last');
+                .append("<th><button type=\"button\" name=\"add\" class=\"btn btn-success btn-sm add\"><span class=\"glyphicon glyphicon-plus\"></span> Add attribute</button></th>");
 
             $table.on('click', '.add', function () {
                 var html = '';
                 html += '<tr>';
                 html += '<td></td>';
                 html += '<td></td>';
-                html += '<td><select name="item_logical_operator[]" class="form-control item_logical_operator"><option value="1"  selected="selected">AND</option>\n' +
-                    '<option value="2">OR</option></select></td>';
-                html += '<td><select name="item_attribute[]" class="form-control item_attribute"><option value="0"  selected="selected">Select Attribute</option>\n' +
-                    '<option value="1">Provider Hotel ID</option></select></td>';
-                html += '<td><select name="item_operator[]" class="form-control item_operator"><option value="1"  selected="selected">Equal</option>\n' +
-                    '<option value="2">Start with</option><option value="3">End with</option><option value="4">Like</option></select></td>';
-                html += '<td><input type="text" name="item_value[]" class="form-control item_value" /></td>';
-                html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="glyphicon glyphicon-minus"></span></button></td></tr>';
+                html += '<td><select name="item_logical_operator[]" class="form-control form-control-sm item_logical_operator"><option value="&&"  selected="selected">AND</option>\n' +
+                    '<option value="||">OR</option></select></td>';
+                html += '<td><select name="item_attribute[]" class="form-control form-control-sm item_attribute"></select></td>';
+                html += '<td><select name="item_operator[]" class="form-control form-control-sm item_operator"><option value="="  selected="selected">Equal</option></select></td>';
+                html += '<td><input type="text" name="item_value[]" class="form-control form-control-sm item_value" /></td>';
+                html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span></button></td></tr>';
                 $table.append(html);
+
+                var itemAttributeSelector = $('.item_attribute');
+                $.each(attributes, function (key, data) {
+                    itemAttributeSelector.append(
+                        $('<option></option>').val(data[0]).html(data[1])
+                    );
+                });
             });
 
             $table.on('click', '.remove', function () {
@@ -190,5 +243,105 @@
             $table.appendTo('#dynamicTable');
         });
     });
+
+    function populateAttribute() {
+        attributes = getAttribute();
+    }
+
+    function validateForm() {
+        var error = '';
+        $('.item_logical_operator').each(function () {
+            var count = 1;
+            if ($(this).val() === '') {
+                error += "<p>Select logical operator at " + count + " row</p>";
+                return false;
+            }
+            count = count + 1;
+        });
+
+        $('.item_attribute').each(function () {
+            var count = 1;
+            if ($(this).val() === '') {
+                error += "<p>Select attribute at " + count + " row</p>";
+                return false;
+            }
+            count = count + 1;
+        });
+
+        $('.item_value').each(function () {
+            var count = 1;
+            if ($(this).val() === '') {
+                error += "<p>Enter value at " + count + " row</p>";
+                return false;
+            }
+            count = count + 1;
+        });
+        return error;
+    }
+
+    function getAttribute() {
+        var arrayReturn = [];
+        $.ajax({
+            url: "http://localhost:9505/attributes",
+            async: false,
+            type: "GET",
+            dataType: 'json',
+            success: function (response) {
+                if (response !== null) {
+                    if (response.success === true) {
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+                                response.data.forEach(function (object, index) {
+                                    arrayReturn.push([
+                                        object.attribute,
+                                        object.name,
+                                    ]);
+                                    return false;
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return arrayReturn;
+    }
+
+    function generateQuery(contextQuery) {
+        if ($('#start-datetime-input').val() === "" || $('#end-datetime-input').val() === "" || $('#option-service-input').val() === "") {
+            swal("Warning", "You must complete the data", "warning");
+        }
+        var param = new Object();
+        param.service = $('#option-service-input').val();
+        param.message_query = $('#text-message-input').val();
+        param.context_query = contextQuery;
+
+        $('#generated-query-input').val("");
+        $.ajax({
+            url: "http://localhost:9505/generate_query",
+            async: false,
+            type: "POST",
+            data: JSON.stringify(param),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: function (response) {
+                if (response !== null) {
+                    console.log(response);
+                    if (response.success) {
+                        $("#modal-default .modal-body").text(response.data);
+                        $('#modal-default').modal();
+                    } else {
+                        swal("Oops", response.error, "error");
+                    }
+                } else {
+                    swal("Oops", "Something went wrong!", "error");
+                }
+            },
+            error: function (xhr, status, error) {
+                var err = JSON.parse(xhr.responseText);
+                swal("Oops", err.error, "error");
+            }
+        });
+    }
 
 </script>

@@ -67,6 +67,28 @@ func Test_getTokenAttributes(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Normal case",
+			args: args{
+				query: `"halo tes"`,
+			},
+			want: []*types.TokenAttribute{
+				{
+					Value: "halo tes",
+				},
+			},
+		},
+		{
+			name: "Normal case",
+			args: args{
+				query: `halo tes`,
+			},
+			want: []*types.TokenAttribute{
+				{
+					Value: "halo tes",
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

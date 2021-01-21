@@ -136,7 +136,10 @@
 <script src="function.js"></script>
 <script>
     var attributes;
+    var attributeHtml;
     $(document).ready(function () {
+        $('input[type=datetime-local]').val(new Date().toJSON().slice(0, 19));
+
         populateAttribute();
     });
 
@@ -147,7 +150,10 @@
             var form_data = $(this).serialize();
             if (error === '') {
                 $('#error').html('<div class=""></div>');
-                generateQuery();
+                var query = buildQuery();
+                if (query !== "") {
+                    generateQuery(query);
+                }
             } else {
                 $('#error').html('<div class="alert alert-danger">' + error + '</div>');
             }
@@ -158,39 +164,10 @@
             var error = validateForm();
             if (error === '') {
                 $('#error').html('<div class=""></div>');
-
-                var contextQuery = [];
-                var isFirstGroup = true;
-                $('.item_table').each(function () {
-                    var groupLogicalOperator = $(this).find('th .item_group_logical_operator').val();
-                    var isContain = false;
-                    var isFirst = true;
-                    var combination = "";
-                    $(this).find('tr').each(function (i, row) {
-                        var itemLogicalOperator = $(row).find('.item_logical_operator').val();
-                        var itemAttribute = $(row).find('.item_attribute').val();
-                        var itemOperator = $(row).find('.item_operator').val();
-                        var itemValue = $(row).find('.item_value').val();
-                        if (!isFirst) {
-                            combination += " " + itemLogicalOperator;
-                        }
-                        combination += " " + itemAttribute + itemOperator + itemValue;
-                        isContain = true;
-                        isFirst = false;
-                    });
-
-                    if (isContain) {
-                        if (!isFirstGroup) {
-                            contextQuery.push(groupLogicalOperator);
-                        }
-                        contextQuery.push("(", combination, ")");
-                    }
-                    isFirstGroup = false;
-                });
-
-                var query = contextQuery.join(" ");
-                console.log("QUERY = " + query);
-                generateQuery(query);
+                var query = buildQuery();
+                if (query !== "") {
+                    generateQuery(query);
+                }
             } else {
                 $('#error').html('<div class="alert alert-danger">' + error + '</div>');
             }
@@ -218,18 +195,11 @@
                 html += '<td></td>';
                 html += '<td><select name="item_logical_operator[]" class="form-control form-control-sm item_logical_operator"><option value="&&"  selected="selected">AND</option>\n' +
                     '<option value="||">OR</option></select></td>';
-                html += '<td><select name="item_attribute[]" class="form-control form-control-sm item_attribute"></select></td>';
+                html += '<td><select name="item_attribute[]" class="form-control form-control-sm item_attribute">' + attributeHtml + '</select></td>';
                 html += '<td><select name="item_operator[]" class="form-control form-control-sm item_operator"><option value="="  selected="selected">Equal</option></select></td>';
                 html += '<td><input type="text" name="item_value[]" class="form-control form-control-sm item_value" /></td>';
                 html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span></button></td></tr>';
                 $table.append(html);
-
-                var itemAttributeSelector = $('.item_attribute');
-                $.each(attributes, function (key, data) {
-                    itemAttributeSelector.append(
-                        $('<option></option>').val(data[0]).html(data[1])
-                    );
-                });
             });
 
             $table.on('click', '.remove', function () {
@@ -246,6 +216,91 @@
 
     function populateAttribute() {
         attributes = getAttribute();
+        $.each(attributes, function (key, data) {
+            attributeHtml += "<option value=\"" + data[0] + "\">" + data[1] + "</option>"
+        });
+    }
+
+    function buildQuery() {
+        var startTimestamp = $('#start-datetime-input').val().replace("T", " ");
+        var endTimestamp = $('#end-datetime-input').val().replace("T", " ");
+
+        console.log(startTimestamp);
+        console.log(endTimestamp);
+
+        var starts = startTimestamp.split(" ");
+        var ends = endTimestamp.split(" ");
+
+        var startDate, endDate;
+        var startTime, endTime;
+        if (starts.length >= 2) {
+            startDate = starts[0];
+            startTime = parseInt(starts[1].split(":")[0]);
+        }
+        if (ends.length >= 2) {
+            endDate = ends[0];
+            endTime = parseInt(ends[1].split(":")[0]);
+        }
+
+        if (startDate !== endDate) {
+            swal("Warning", "Date must be same", "warning");
+            return "";
+        }
+        if (startTime > endTime) {
+            swal("Warning", "Start time can't greater than end time", "warning");
+            return "";
+        }
+
+        var contextQueries = [];
+        var isFirstDateKey = true;
+        for (var i = startTime; i <= endTime; i++) {
+            if (i === startTime) {
+                contextQueries.push("(");
+            }
+            if (!isFirstDateKey) {
+                contextQueries.push("||");
+            }
+            var strTime = "" + i;
+            if (i < 10) {
+                strTime = "0" + i;
+            }
+            contextQueries.push("datekey=" + startDate.replaceAll("-", "") + strTime);
+            if (i === endTime) {
+                contextQueries.push(")");
+            }
+            isFirstDateKey = false;
+        }
+
+        contextQueries.push("&& timestamp>=\"" + startTimestamp + "\"");
+        contextQueries.push("&& timestamp<=\"" + endTimestamp + "\"");
+
+        $('.item_table').each(function () {
+            var groupLogicalOperator = $(this).find('th .item_group_logical_operator').val();
+            var isContain = false;
+            var isFirst = true;
+            var combination = "";
+            $(this).find('tr').each(function (i, row) {
+                var itemLogicalOperator = $(row).find('.item_logical_operator').val();
+                var itemAttribute = $(row).find('.item_attribute').val();
+                var itemOperator = $(row).find('.item_operator').val();
+                var itemValue = $(row).find('.item_value').val();
+                if (!isFirst) {
+                    combination += " " + itemLogicalOperator;
+                }
+                combination += " " + itemAttribute + itemOperator + itemValue;
+                isContain = true;
+                isFirst = false;
+            });
+
+            if (isContain) {
+                contextQueries.push(groupLogicalOperator);
+                contextQueries.push("(", combination, ")");
+            }
+        });
+
+        var query = contextQueries.join(" ");
+        console.log("QUERY = " + query);
+        return query;
     }
 
     function validateForm() {

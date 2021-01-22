@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"github.com/ahmadrezamusthafa/logwatcher/common"
 	"github.com/ahmadrezamusthafa/logwatcher/common/errors"
+	"github.com/ahmadrezamusthafa/logwatcher/common/util"
 	"github.com/ahmadrezamusthafa/multigenerator"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/consts"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/enums/valuetype"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/types"
 	"io/ioutil"
+	"reflect"
 	"strings"
 )
 
@@ -72,10 +74,28 @@ func (svc *Service) Query(ctx context.Context, serviceCode string, query QueryIn
 	}
 	for rows.Next() {
 		row := QueryOutput{}
-		err = rows.Scan(&row.Timestamp, &row.Message, &row.FlowID, &row.Type, &row.Hostname, &row.Part)
+		contextInfo := ASIPCNTContext{}
+		err = rows.Scan(
+			&row.Timestamp,
+			&row.Message,
+			&row.FlowID,
+			&row.Type,
+			&row.Hostname,
+			&row.Part,
+			&contextInfo.CorrelationID,
+			&contextInfo.Event,
+			&contextInfo.Uri,
+			&contextInfo.ProviderID,
+			&contextInfo.ProviderHotelID,
+			&contextInfo.Locale,
+			&contextInfo.ProviderBrandID,
+			&contextInfo.ProviderChainID,
+		)
 		if err != nil {
 			return outputs, errors.AddTrace(err)
 		}
+		contextHtml := generateContextHtml(contextInfo)
+		row.Context = &contextHtml
 		outputs = append(outputs, row)
 	}
 	return outputs, nil
@@ -132,4 +152,38 @@ func appendAttribute(tokenAttributes []*types.TokenAttribute, buffer *bytes.Buff
 	})
 	buffer.Reset()
 	return tokenAttributes
+}
+
+func generateContextHtml(contexts interface{}) string {
+	v := reflect.ValueOf(contexts)
+	typeOfS := v.Type()
+
+	buffer := bytes.Buffer{}
+	for i := 0; i < v.NumField(); i++ {
+		fmt.Printf("Field: %s\tValue: %v\n", typeOfS.Field(i).Name, v.Field(i).Interface())
+
+		typeField := typeOfS.Field(i)
+		field := v.Field(i)
+		name := typeField.Name
+		value := field.Interface()
+
+		if field.Kind() == reflect.Ptr && field.IsNil() {
+			continue
+		}
+
+		switch value.(type) {
+		case int:
+			value = util.InterfaceToInt(value)
+		case *int:
+			value = util.InterfacePtrToInt(value)
+		case string:
+			value = util.InterfaceToString(value)
+		case *string:
+			value = util.InterfacePtrToString(value)
+		}
+
+		buffer.WriteString(fmt.Sprintf(`<span style="background-color: #33cc66; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px; margin-bottom: 5px;">%s : %v</span><br/>`,
+			name, value))
+	}
+	return buffer.String()
 }

@@ -9,7 +9,25 @@ const (
 )
 
 var mapQuery = map[ServiceName]string{
-	ASIPCNT: `SELECT timestamp,message,flowid,type,hostname,part FROM "s3log"."pcntapirqrs_init"`,
+	ASIPCNT: `
+SELECT 
+  timestamp, 
+  message, 
+  flowid, 
+  type, 
+  hostname, 
+  part, 
+  context.correlationid, 
+  context.event, 
+  context.uri, 
+  context.providerid, 
+  context.providerhotelid, 
+  context.locale, 
+  context.providerbrandid, 
+  context.providerchainid 
+FROM 
+  "s3log"."pcntapirqrs_init"
+`,
 	ASIPRSV: ``,
 	ASIPSRC: ``,
 }

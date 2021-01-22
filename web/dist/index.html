@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Log Watcher</title>
+  <title>ASI - Log Watcher</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
 
@@ -21,7 +21,7 @@
       <div class="header-body">
         <div class="row align-items-center py-4">
           <div class="col-sm-1 col-md-2">
-            <h6 class="h2 text-white d-inline-block mb-0">LOG Watcher</h6>
+            <h6 class="h2 text-white d-inline-block mb-0">ASI - LOG Watcher</h6>
           </div>
         </div>
         <!-- Card stats -->
@@ -36,11 +36,20 @@
               </select>
             </div>
           </div>
-          <div class="col-xl-6 col-md-4">
+          <div class="col-xl-1 col-md-4">
             <div class="form-group">
-              <label style="color: white" for="example-datetime-local-input" class="form-control-label">Query</label>
+              <label style="color: white" for="example-datetime-local-input" class="form-control-label">Source</label>
+              <select class="form-control form-control-sm" id="option-service-input">
+                <option value="DEMAND">Demand</option>
+                <option value="PROVIDER">Provider</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xl-5 col-md-4">
+            <div class="form-group">
+              <label style="color: white" for="example-datetime-local-input" class="form-control-label">Message Query</label>
               <input id="text-message-input" type="text" class="form-control form-control-sm"
-                     placeholder="Message query">
+                     placeholder="Query">
             </div>
           </div>
           <div class="col-xl-2 col-md-4">
@@ -73,21 +82,15 @@
               </select>
             </div>
           </div>
-
         </div>
-        <div class="pb-1">
-          <div class="container-sm">
-            <br>
-            <div class="table-responsive">
-              <span id="error"></span>
-              <div class="card">
-                <div id="dynamicTable">
-                </div>
+        <div class="container-sm">
+          <div class="table-responsive">
+            <span id="error"></span>
+            <div class="card">
+              <div id="dynamicTable">
               </div>
             </div>
           </div>
-        </div>
-        <div class="container-sm">
           <div class="row align-items-center">
             <div class="col-xl-4 col-md-4">
               <div class="form-group">
@@ -95,7 +98,7 @@
                        class="form-control-label"> </label>
                 <button class="btn btn-outline-white btn-block" type="button" id="btn-new-group" name="new-group">
                   <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
-                  <span class="btn-inner--text">Add Query Context</span>
+                  <span class="btn-inner--text">Add Context Query</span>
                 </button>
               </div>
             </div>
@@ -120,7 +123,7 @@
               </div>
             </div>
           </div>
-          <div class="row justify-content-md-center pb-4">
+          <div class="row justify-content-md-center pb-2">
             <div class="col-md-auto">
               <div id="loader" style="display:none">
                 <img src="https://s2.svgbox.net/loaders.svg?ic=puff&color=ffffff" width="36" height="36">
@@ -140,6 +143,7 @@
         <th rowspan="2">Flow ID</th>
         <th rowspan="2">Type</th>
         <th rowspan="2">Part</th>
+        <th rowspan="2">Context</th>
         <th rowspan="2">Message</th>
       </tr>
       </thead>
@@ -163,6 +167,7 @@
       </div>
     </div>
   </div>
+</div>
 </body>
 </html>
 
@@ -199,6 +204,25 @@
         $("#loader").css("display", "none");
     });
 
+    function copyToClipboard(e) {
+        var leftTdIndex = $(e).parent().index() - 1;
+        var leftTd = $(e).closest("tr").find("td:eq(" + leftTdIndex + ")");
+        execCopyToClipboard($(leftTd).text());
+    }
+
+    function execCopyToClipboard(txt) {
+        var el = document.createElement('textarea');
+
+        el.value = txt;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
+
     $(function () {
         $("#btn-search").click(function (e) {
             e.preventDefault();
@@ -231,11 +255,11 @@
 
         $("#btn-new-group").click(function (e) {
             e.preventDefault();
-            var $table = $('<table class="table table-borderless item_table" id="item_table[]">');
+            var $table = $('<table class="table item_table" id="item_table[]" style="margin-top: 5px">');
             var $tbody = $table.append('<tbody />').children('tbody');
 
             $tbody
-                .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-danger btn-sm remove_group\"><span class=\"btn-inner--icon\"><i class=\"ni ni-fat-delete\"></i></span></button></th>")
+                .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-danger btn-sm remove_group\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete context group\"><span class=\"btn-inner--icon\"><i class=\"ni ni-fat-delete\"></i></span></button></th>")
                 .append("<th><select name=\"item_group_logical_operator[]\" class=\"form-control form-control-sm item_group_logical_operator\"><option value=\"&&\"  selected=\"selected\">AND</option>\\n' +\n" +
                     "'<option value=\"||\">OR</option></select></th>")
                 .append("<th>Logical</th>")
@@ -245,11 +269,16 @@
                 .append("<th><button type=\"button\" name=\"add\" class=\"btn btn-success btn-sm add\"><span class=\"glyphicon glyphicon-plus\"></span> Add attribute</button></th>");
 
             $table.on('click', '.add', function () {
+                var display = "none";
+                if ($tbody[0].rows.length > 0) {
+                    display = "block";
+                }
+
                 var html = '';
                 html += '<tr>';
                 html += '<td></td>';
                 html += '<td></td>';
-                html += '<td><select name="item_logical_operator[]" class="form-control form-control-sm item_logical_operator"><option value="&&"  selected="selected">AND</option>\n' +
+                html += '<td><select name="item_logical_operator[]" class="form-control form-control-sm item_logical_operator" style="display:' + display + '"><option value="&&"  selected="selected">AND</option>\n' +
                     '<option value="||">OR</option></select></td>';
                 html += '<td><select name="item_attribute[]" class="form-control form-control-sm item_attribute">' + attributeHtml + '</select></td>';
                 html += '<td><select name="item_operator[]" class="form-control form-control-sm item_operator"><option value="="  selected="selected">Equal</option></select></td>';
@@ -263,6 +292,7 @@
             });
 
             $table.on('click', '.remove_group', function () {
+                $('#error').html('<div class=""></div>');
                 $table.remove();
             });
 
@@ -339,7 +369,7 @@
                 var itemLogicalOperator = $(row).find('.item_logical_operator').val();
                 var itemAttribute = $(row).find('.item_attribute').val();
                 var itemOperator = $(row).find('.item_operator').val();
-                var itemValue = $(row).find('.item_value').val();
+                var itemValue = $(row).find('.item_value').val().trim();
                 if (!isFirst) {
                     combination += " " + itemLogicalOperator;
                 }
@@ -500,13 +530,18 @@
         var htmlResult = [];
         $.each(data, function (i, data) {
             data.message = data.message.replaceAll(/<br\/>|<p>|<\/p>|<br>/g, " ");
+
+            var contextValue = JSON.stringify(data.context);
+
             var row = $(document.createElement("tr"));
             row.append($('<td></td>').append(data.timestamp));
             row.append($('<td></td>').append(data.hostname));
             row.append($('<td></td>').append(data.flowid));
             row.append($('<td></td>').append(data.type));
             row.append($('<td></td>').append(data.part));
-            row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" name="copy" class="btn btn-outline-dark btn-sm">Copy</button>' +
+            row.append($('<td>'+data.context+'</td>'));
+            row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" ' +
+                'data-toggle="tooltip" data-placement="right" title="Copy" class="btn btn-outline-dark btn-sm ni ni-single-copy-04" onclick="copyToClipboard(this)"></button>' +
                 '</td>').append(data.message));
 
             htmlResult.push(row);

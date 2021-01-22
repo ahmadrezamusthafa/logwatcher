@@ -62,3 +62,31 @@ func Decrypt(encryptedText, key string) string {
 	}
 	return string(plaintext)
 }
+
+func InterfacePtrToInt(input interface{}) int {
+	if val, ok := input.(*int); ok {
+		return *val
+	}
+	return 0
+}
+
+func InterfaceToInt(input interface{}) int {
+	if val, ok := input.(int); ok {
+		return val
+	}
+	return 0
+}
+
+func InterfacePtrToString(input interface{}) string {
+	if val, ok := input.(*string); ok {
+		return *val
+	}
+	return ""
+}
+
+func InterfaceToString(input interface{}) string {
+	if val, ok := input.(string); ok {
+		return val
+	}
+	return ""
+}

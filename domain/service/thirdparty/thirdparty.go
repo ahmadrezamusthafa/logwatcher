@@ -11,6 +11,7 @@ import (
 	"github.com/ahmadrezamusthafa/multigenerator/shared/enums/valuetype"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/types"
 	"io/ioutil"
+	"strings"
 )
 
 func (svc *Service) GetLogAttributes(ctx context.Context) (attributes []LogAttribute, err error) {
@@ -25,7 +26,7 @@ func (svc *Service) GetLogAttributes(ctx context.Context) (attributes []LogAttri
 	return attributes, nil
 }
 
-func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query QueryInput) (generated string, err error) {
+func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query QueryInput, limit int) (generated string, err error) {
 	baseConditions := []*types.Condition{}
 	queryContexts := []*types.Condition{}
 	condition := types.Condition{
@@ -42,6 +43,9 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	}
 	queryContexts = append(queryContexts, &condition)
 	baseConditions = append(baseConditions, queryContexts...)
+	if limit <= 0 {
+		limit = DEFAULT_LIMIT
+	}
 	baseCondition := types.BaseCondition{
 		Conditions: baseConditions,
 	}
@@ -50,17 +54,30 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	if err != nil {
 		return "", errors.AddTrace(err)
 	}
+	generatedQuery = strings.TrimSpace(generatedQuery)
+	generatedQuery += fmt.Sprint(" LIMIT ", limit)
 	return generatedQuery, nil
 }
 
-func (svc *Service) Query(ctx context.Context, serviceCode string, query QueryInput) error {
-	generatedQuery, err := svc.GenerateQuery(ctx, serviceCode, query)
+func (svc *Service) Query(ctx context.Context, serviceCode string, query QueryInput, limit int) (outputs []QueryOutput, err error) {
+	generatedQuery, err := svc.GenerateQuery(ctx, serviceCode, query, limit)
 	if err != nil {
-		return errors.AddTrace(err)
+		return outputs, errors.AddTrace(err)
 	}
-	//TODO: exec query to athena
 	fmt.Println(generatedQuery)
-	return nil
+	rows, err := svc.DB.GetDB().Query(generatedQuery)
+	if err != nil {
+		return outputs, errors.AddTrace(err)
+	}
+	for rows.Next() {
+		row := QueryOutput{}
+		err = rows.Scan(&row.Timestamp, &row.Message, &row.FlowID, &row.Type, &row.Hostname, &row.Part)
+		if err != nil {
+			return outputs, errors.AddTrace(err)
+		}
+		outputs = append(outputs, row)
+	}
+	return outputs, nil
 }
 
 func parseMessageQuery(message string) []*types.Condition {

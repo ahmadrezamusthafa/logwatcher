@@ -16,9 +16,9 @@ func main() {
 	var externalID string
 
 	const (
-		defaultARN   = "arn:aws:iam::787755326983:role/PowerUser"
+		defaultARN   = "arn:aws:iam::787755326983:role/ReadOnly"
 		arnUsage     = "The ARN of the role you need to assume"
-		defaultExtID = "PowerUser@tvlk-asi-stg"
+		defaultExtID = "ReadOnly@tvlk-asi-stg"
 		extIDUsage   = "The ExternalID constraint, if applicable for the role you need to assume"
 		region       = "ap-southeast-1"
 	)

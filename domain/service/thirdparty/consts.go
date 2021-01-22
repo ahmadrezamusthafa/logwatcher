@@ -9,7 +9,7 @@ const (
 )
 
 var mapQuery = map[ServiceName]string{
-	ASIPCNT: `SELECT * FROM "s3log"."pcntapirqrs_init"`,
+	ASIPCNT: `SELECT timestamp,message,flowid,type,hostname,part FROM "s3log"."pcntapirqrs_init"`,
 	ASIPRSV: ``,
 	ASIPSRC: ``,
 }
@@ -25,3 +25,4 @@ func (c ServiceName) ToString() string {
 	return string(c)
 }
 
+const DEFAULT_LIMIT = 10

@@ -3,6 +3,7 @@ package thirdparty
 type QueryInput struct {
 	MessageQuery string
 	ContextQuery string
+	Limit        int
 }
 
 type QueryOutput struct {

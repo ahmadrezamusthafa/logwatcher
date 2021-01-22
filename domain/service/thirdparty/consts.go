@@ -25,3 +25,4 @@ func (c ServiceName) ToString() string {
 	return string(c)
 }
 
+const DEFAULT_LIMIT = 10

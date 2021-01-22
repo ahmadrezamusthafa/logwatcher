@@ -16,6 +16,10 @@ type QueryOutput struct {
 	Context   map[string]interface{} `json:"context"`
 }
 
+type Context struct {
+	CorrelationID *string `json:"correlationid"`
+}
+
 type LogAttribute struct {
 	Attribute string `json:"attribute"`
 	Name      string `json:"name"`

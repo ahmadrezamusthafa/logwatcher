@@ -1,4 +1,4 @@
-package thirdparty
+package common
 
 type ServiceName string
 
@@ -10,6 +10,12 @@ const (
 
 var mapQuery = map[ServiceName]string{
 	ASIPCNT: `SELECT timestamp,message,flowid,type,hostname,part FROM "s3log"."pcntapirqrs_init"`,
+	ASIPRSV: ``,
+	ASIPSRC: ``,
+}
+
+var mapS3Bucket = map[ServiceName]string{
+	ASIPCNT: "asipcnt-logging-775451169198-dc88e4c4e4897c39",
 	ASIPRSV: ``,
 	ASIPSRC: ``,
 }

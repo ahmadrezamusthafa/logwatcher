@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/ahmadrezamusthafa/logwatcher/common"
 	"github.com/ahmadrezamusthafa/logwatcher/common/errors"
 	"github.com/ahmadrezamusthafa/multigenerator"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/consts"
@@ -44,12 +45,12 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	queryContexts = append(queryContexts, &condition)
 	baseConditions = append(baseConditions, queryContexts...)
 	if limit <= 0 {
-		limit = DEFAULT_LIMIT
+		limit = common.DEFAULT_LIMIT
 	}
 	baseCondition := types.BaseCondition{
 		Conditions: baseConditions,
 	}
-	svcName := ServiceName(serviceCode)
+	svcName := common.ServiceName(serviceCode)
 	generatedQuery, err := multigenerator.GenerateQuery(svcName.GetBaseQuery(), baseCondition)
 	if err != nil {
 		return "", errors.AddTrace(err)

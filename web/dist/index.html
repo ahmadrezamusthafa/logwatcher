@@ -16,11 +16,11 @@
 
 <body>
 <div>
-  <div class="header bg-gradient-blue pb-1">
+  <div class="header bg-gradient-indigo pb-1">
     <div class="container-fluid">
       <div class="header-body">
         <div class="row align-items-center py-4">
-          <div class="col-lg-6 col-7">
+          <div class="col-sm-1 col-md-2">
             <h6 class="h2 text-white d-inline-block mb-0">LOG Watcher</h6>
           </div>
         </div>
@@ -36,7 +36,7 @@
               </select>
             </div>
           </div>
-          <div class="col-xl-4 col-md-4">
+          <div class="col-xl-6 col-md-4">
             <div class="form-group">
               <label style="color: white" for="example-datetime-local-input" class="form-control-label">Query</label>
               <input id="text-message-input" type="text" class="form-control form-control-sm"
@@ -73,35 +73,61 @@
               </select>
             </div>
           </div>
-          <div class="col-xl-2 col-md-4">
-            <div class="form-group">
-              <label style="color: white" for="example-datetime-local-input"
-                     class="form-control-label"> </label>
-              <button class="btn btn-outline-white btn-block" type="button" id="btn-search" name="submit">
-                <span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
-                <span class="btn-inner--text">Search</span>
-              </button>
+
+        </div>
+        <div class="pb-1">
+          <div class="container-sm">
+            <br>
+            <div class="table-responsive">
+              <span id="error"></span>
+              <div class="card">
+                <div id="dynamicTable">
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="pb-4">
-    <div class="container-sm">
-      <br>
-      <div class="table-responsive">
-        <span id="error"></span>
-        <div id="dynamicTable">
+        <div class="container-sm">
+          <div class="row align-items-center">
+            <div class="col-xl-4 col-md-4">
+              <div class="form-group">
+                <label style="color: white" for="example-datetime-local-input"
+                       class="form-control-label"> </label>
+                <button class="btn btn-outline-white btn-block" type="button" id="btn-new-group" name="new-group">
+                  <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                  <span class="btn-inner--text">Add Query Context</span>
+                </button>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-4">
+              <div class="form-group">
+                <label style="color: white" for="example-datetime-local-input"
+                       class="form-control-label"> </label>
+                <button class="btn btn-outline-white btn-block" type="button" id="btn-generate-query" name="generate-query">
+                  <span class="btn-inner--icon"><i class="ni ni-settings-gear-65"></i></span>
+                  <span class="btn-inner--text">Generate Query</span>
+                </button>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-4">
+              <div class="form-group">
+                <label style="color: white" for="example-datetime-local-input"
+                       class="form-control-label"> </label>
+                <button class="btn btn-outline-white btn-block" type="button" id="btn-search" name="submit">
+                  <span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+                  <span class="btn-inner--text">Search</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-md-center pb-4">
+            <div class="col-md-auto">
+              <div id="loader" style="display:none">
+                <img src="https://s2.svgbox.net/loaders.svg?ic=puff&color=ffffff" width="36" height="36">
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div align="center" style="margin-top: 30px;margin-bottom: 40px">
-        <button type="button" id="btn-new-group" name="new-group" class="btn btn-info btn-sm">Add Query Context
-          Group
-        </button>
-        <button type="button" id="btn-generate-query" name="generate-query" class="btn btn-dark btn-sm">Generate
-          Query
-        </button>
       </div>
     </div>
   </div>
@@ -134,7 +160,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
         </div>
-
       </div>
     </div>
   </div>
@@ -164,6 +189,14 @@
         }
 
         populateAttribute();
+    });
+
+    $(document).ajaxStart(function () {
+        $("#loader").css("display", "block");
+    }).ajaxSuccess(function () {
+        $("#loader").css("display", "none");
+    }).ajaxError(function () {
+        $("#loader").css("display", "none");
     });
 
     $(function () {
@@ -198,7 +231,7 @@
 
         $("#btn-new-group").click(function (e) {
             e.preventDefault();
-            var $table = $('<table class="table table-bordered item_table" id="item_table[]">');
+            var $table = $('<table class="table table-borderless item_table" id="item_table[]">');
             var $tbody = $table.append('<tbody />').children('tbody');
 
             $tbody
@@ -221,7 +254,7 @@
                 html += '<td><select name="item_attribute[]" class="form-control form-control-sm item_attribute">' + attributeHtml + '</select></td>';
                 html += '<td><select name="item_operator[]" class="form-control form-control-sm item_operator"><option value="="  selected="selected">Equal</option></select></td>';
                 html += '<td><input type="text" name="item_value[]" class="form-control form-control-sm item_value" /></td>';
-                html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span></button></td></tr>';
+                html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>Remove</button></td></tr>';
                 $table.append(html);
             });
 
@@ -439,7 +472,7 @@
 
         $.ajax({
             url: "http://localhost:9505/query",
-            async: false,
+            async: true,
             type: "POST",
             data: JSON.stringify(param),
             contentType: "application/json; charset=utf-8",
@@ -473,7 +506,7 @@
             row.append($('<td></td>').append(data.flowid));
             row.append($('<td></td>').append(data.type));
             row.append($('<td></td>').append(data.part));
-            row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" name="copy" class="btn btn-dark btn-sm">Copy</button>' +
+            row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" name="copy" class="btn btn-outline-dark btn-sm">Copy</button>' +
                 '</td>').append(data.message));
 
             htmlResult.push(row);

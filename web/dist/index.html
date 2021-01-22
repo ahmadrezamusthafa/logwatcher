@@ -104,44 +104,40 @@
         </button>
       </div>
     </div>
-    <div style="width: auto; margin: 0 0;">
-      <div class="content-block">
-        <div class="block-content">
-
-          <table id="tableResult" class="table table-striped table-bordered table-horizontal-scroll">
-            <thead>
-            <tr>
-              <th rowspan="2">Timestamp</th>
-              <th rowspan="2">Hostname</th>
-              <th rowspan="2">Flow ID</th>
-              <th rowspan="2">Type</th>
-              <th rowspan="2">Part</th>
-              <th rowspan="2">Message</th>
-              <th rowspan="2">Context</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+  </div>
+  <div class="table-wrapper">
+    <table id="tableResult" class="table table-striped table-bordered table-horizontal-scroll">
+      <thead>
+      <tr>
+        <th rowspan="2">Timestamp</th>
+        <th rowspan="2">Hostname</th>
+        <th rowspan="2">Flow ID</th>
+        <th rowspan="2">Type</th>
+        <th rowspan="2">Part</th>
+        <th rowspan="2">Message</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+       aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="modal-title-default">Generated Query</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
+        <div class="modal-body" style="font-size: 14px; font-family: monospace"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
+        </div>
+
       </div>
     </div>
-    <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default"
-         aria-hidden="true">
-      <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h6 class="modal-title" id="modal-title-default">Generated Query</h6>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body" style="font-size: 14px; font-family: monospace"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
-          </div>
-
-        </div>
-      </div>
+  </div>
 </body>
 </html>
 
@@ -151,6 +147,21 @@
     var attributeHtml;
     $(document).ready(function () {
         $('input[type=datetime-local]').val(new Date().toJSON().slice(0, 16));
+
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
 
         populateAttribute();
     });
@@ -437,6 +448,7 @@
                 if (response !== null) {
                     console.log(response);
                     if (response.success) {
+                        setDataTable(response.data);
                     } else {
                         swal("Oops", response.error, "error");
                     }
@@ -449,6 +461,28 @@
                 swal("Oops", err.error.message, "error");
             }
         });
+    }
+
+    function setDataTable(data) {
+        var htmlResult = [];
+        $.each(data, function (i, data) {
+            data.message = data.message.replaceAll(/<br\/>|<p>|<\/p>|<br>/g, " ");
+            var row = $(document.createElement("tr"));
+            row.append($('<td></td>').append(data.timestamp));
+            row.append($('<td></td>').append(data.hostname));
+            row.append($('<td></td>').append(data.flowid));
+            row.append($('<td></td>').append(data.type));
+            row.append($('<td></td>').append(data.part));
+            row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" name="copy" class="btn btn-dark btn-sm">Copy</button>' +
+                '</td>').append(data.message));
+
+            htmlResult.push(row);
+        });
+
+        $('#tableResult tbody')
+            .empty()
+            .append(...htmlResult);
+
     }
 
 </script>

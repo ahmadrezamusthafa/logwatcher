@@ -18,11 +18,14 @@ type Handler struct {
 
 func (h *Handler) GetLogAttributes(c *gin.Context) {
 	var (
-		r          = c.Request
-		w          = c.Writer
-		err        error
-		ctx        = r.Context()
-		respWriter = respwriter.New()
+		r           = c.Request
+		w           = c.Writer
+		err         error
+		serviceName string
+		sourceName  string
+		ctx         = r.Context()
+		queries     = r.URL.Query()
+		respWriter  = respwriter.New()
 	)
 	defer func() {
 		if err != nil {
@@ -30,7 +33,14 @@ func (h *Handler) GetLogAttributes(c *gin.Context) {
 		}
 	}()
 
-	resp, err := h.ThirdPartyService.GetLogAttributes(ctx)
+	if val, ok := queries["service"]; ok {
+		serviceName = val[0]
+	}
+	if val, ok := queries["source"]; ok {
+		sourceName = val[0]
+	}
+
+	resp, err := h.ThirdPartyService.GetLogAttributes(ctx, serviceName, sourceName)
 	if err != nil {
 		err = errors.AddTrace(err)
 		return
@@ -68,7 +78,7 @@ func (h *Handler) GenerateQuery(c *gin.Context) {
 		MessageQuery: param.MessageQuery,
 		ContextQuery: param.ContextQuery,
 	}
-	generatedQuery, err := h.ThirdPartyService.GenerateQuery(ctx, param.Service, queryInput, param.Limit)
+	generatedQuery, err := h.ThirdPartyService.GenerateQuery(ctx, param.Service, param.Source, queryInput, param.Limit)
 	if err != nil {
 		err = errors.AddTrace(err)
 		return
@@ -106,7 +116,7 @@ func (h *Handler) Query(c *gin.Context) {
 		MessageQuery: param.MessageQuery,
 		ContextQuery: param.ContextQuery,
 	}
-	output, err := h.ThirdPartyService.Query(ctx, param.Service, queryInput, param.Limit)
+	output, err := h.ThirdPartyService.Query(ctx, param.Service, param.Source, queryInput, param.Limit)
 	if err != nil {
 		err = errors.AddTrace(err)
 		return

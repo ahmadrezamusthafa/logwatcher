@@ -2176,6 +2176,10 @@ pre code
         margin-left: 91.66667%;
     }
 }
+.table-wrapper
+{
+    overflow: scroll;
+}
 
 .table
 {
@@ -2190,7 +2194,7 @@ pre code
 {
     padding: 1rem;
 
-    vertical-align: top;
+    vertical-align: center;
 
     border-top: 1px solid #e9ecef;
 }
@@ -29837,4 +29841,26 @@ input.datetimepicker[data-color='yellow'] + .bootstrap-datetimepicker-widget.dro
 .bootstrap-datetimepicker-widget.dropdown-black table td .btn[data-action='togglePeriod']
 {
     background: transparent;
+}
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
 }

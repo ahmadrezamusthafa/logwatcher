@@ -30,5 +30,17 @@
   {
     "attribute": "context.providerchainid",
     "name": "Provider Chain ID"
+  },
+  {
+    "attribute": "flowid",
+    "name": "Flow ID"
+  },
+  {
+    "attribute": "type",
+    "name": "Type"
+  },
+  {
+    "attribute": "hostname",
+    "name": "Hostname"
   }
 ]

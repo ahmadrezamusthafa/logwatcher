@@ -249,8 +249,6 @@ func generateContextHtml(contexts interface{}) string {
 
 	buffer := bytes.Buffer{}
 	for i := 0; i < v.NumField(); i++ {
-		fmt.Printf("Field: %s\tValue: %v\n", typeOfS.Field(i).Name, v.Field(i).Interface())
-
 		typeField := typeOfS.Field(i)
 		field := v.Field(i)
 		name := typeField.Name

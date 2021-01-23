@@ -17,8 +17,26 @@ import (
 	"strings"
 )
 
-func (svc *Service) GetLogAttributes(ctx context.Context) (attributes []LogAttribute, err error) {
-	data, err := ioutil.ReadFile("domain/service/thirdparty/resource/asipcnt_logattribute.json")
+func (svc *Service) GetLogAttributes(ctx context.Context, serviceName, sourceName string) (attributes []LogAttribute, err error) {
+	fileName := ""
+	switch common.ServiceName(serviceName) {
+	case common.ASIPCNT:
+		if common.SourceName(sourceName) == common.DEMAND {
+			fileName = "asipcnt_logattribute"
+		} else {
+			return attributes, nil
+		}
+	case common.ASIPSRC:
+		if common.SourceName(sourceName) == common.DEMAND {
+			fileName = "asipsrc_logattribute"
+		} else {
+			fileName = "asipsrc_detail_logattribute"
+		}
+	default:
+		return attributes, nil
+	}
+
+	data, err := ioutil.ReadFile("domain/service/thirdparty/resource/" + fileName + ".json")
 	if err != nil {
 		return attributes, errors.AddTrace(err)
 	}
@@ -29,7 +47,7 @@ func (svc *Service) GetLogAttributes(ctx context.Context) (attributes []LogAttri
 	return attributes, nil
 }
 
-func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query QueryInput, limit int) (generated string, err error) {
+func (svc *Service) GenerateQuery(ctx context.Context, serviceName, sourceName string, query QueryInput, limit int) (generated string, err error) {
 	baseConditions := []*types.Condition{}
 	queryContexts := []*types.Condition{}
 	condition := types.Condition{
@@ -52,8 +70,23 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	baseCondition := types.BaseCondition{
 		Conditions: baseConditions,
 	}
-	svcName := common.ServiceName(serviceCode)
-	generatedQuery, err := multigenerator.GenerateQuery(svcName.GetBaseQuery(), baseCondition)
+	svcName := common.ServiceName(serviceName)
+
+	switch svcName {
+	case common.ASIPCNT:
+		if common.SourceName(sourceName) != common.DEMAND {
+			return "", errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, sourceName))
+		}
+	case common.ASIPSRC:
+	default:
+		return "", errors.AddTrace(fmt.Errorf("%s log service is not registered yet", serviceName))
+	}
+
+	baseQuery, err := common.GetBaseQuery(serviceName, sourceName)
+	if err != nil {
+		return "", errors.AddTrace(err)
+	}
+	generatedQuery, err := multigenerator.GenerateQuery(baseQuery, baseCondition)
 	if err != nil {
 		return "", errors.AddTrace(err)
 	}
@@ -62,39 +95,95 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceCode string, query
 	return generatedQuery, nil
 }
 
-func (svc *Service) Query(ctx context.Context, serviceCode string, query QueryInput, limit int) (outputs []QueryOutput, err error) {
-	generatedQuery, err := svc.GenerateQuery(ctx, serviceCode, query, limit)
+func (svc *Service) Query(ctx context.Context, serviceName, sourceName string, query QueryInput, limit int) (outputs []QueryOutput, err error) {
+	generatedQuery, err := svc.GenerateQuery(ctx, serviceName, sourceName, query, limit)
 	if err != nil {
 		return outputs, errors.AddTrace(err)
 	}
 	fmt.Println(generatedQuery)
-	rows, err := svc.DB.GetDB().Query(generatedQuery)
+	svcName := common.ServiceName(serviceName)
+	rows, err := svc.DB.GetDB(svcName).Query(generatedQuery)
 	if err != nil {
 		return outputs, errors.AddTrace(err)
 	}
 	for rows.Next() {
 		row := QueryOutput{}
-		contextInfo := ASIPCNTContext{}
-		err = rows.Scan(
-			&row.Timestamp,
-			&row.Message,
-			&row.FlowID,
-			&row.Type,
-			&row.Hostname,
-			&row.Part,
-			&contextInfo.CorrelationID,
-			&contextInfo.Event,
-			&contextInfo.Uri,
-			&contextInfo.ProviderID,
-			&contextInfo.ProviderHotelID,
-			&contextInfo.Locale,
-			&contextInfo.ProviderBrandID,
-			&contextInfo.ProviderChainID,
-		)
-		if err != nil {
-			return outputs, errors.AddTrace(err)
+		var finalContext interface{}
+
+		switch svcName {
+		case common.ASIPCNT:
+			if common.SourceName(sourceName) == common.DEMAND {
+				contextInfo := ASIPCNTContext{}
+				err = rows.Scan(
+					&row.Timestamp,
+					&row.Message,
+					&row.FlowID,
+					&row.Type,
+					&row.Hostname,
+					&row.Part,
+					&contextInfo.CorrelationID,
+					&contextInfo.Event,
+					&contextInfo.Uri,
+					&contextInfo.ProviderID,
+					&contextInfo.ProviderHotelID,
+					&contextInfo.Locale,
+					&contextInfo.ProviderBrandID,
+					&contextInfo.ProviderChainID,
+				)
+				if err != nil {
+					return outputs, errors.AddTrace(err)
+				}
+				finalContext = contextInfo
+			} else {
+				return outputs, errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, sourceName))
+			}
+		case common.ASIPSRC:
+			if common.SourceName(sourceName) == common.DEMAND {
+				contextInfo := ASIPSRCContext{}
+				err = rows.Scan(
+					&row.Timestamp,
+					&row.Message,
+					&row.FlowID,
+					&row.Type,
+					&row.Hostname,
+					&row.Part,
+					&contextInfo.CorrelationID,
+					&contextInfo.ProviderID,
+					&contextInfo.Event,
+					&contextInfo.SourceMarket,
+					&contextInfo.CheckinDate,
+					&contextInfo.CheckoutDate,
+					&contextInfo.Locale,
+					&contextInfo.Currency,
+					&contextInfo.NoOfAdult,
+					&contextInfo.NoOfChild,
+					&contextInfo.NoOfRoom,
+				)
+				if err != nil {
+					return outputs, errors.AddTrace(err)
+				}
+				finalContext = contextInfo
+			} else {
+				contextInfo := ASIPSRCDetailContext{}
+				err = rows.Scan(
+					&row.Timestamp,
+					&row.Message,
+					&row.FlowID,
+					&row.Type,
+					&row.Hostname,
+					&row.Part,
+					&contextInfo.CorrelationID,
+				)
+				if err != nil {
+					return outputs, errors.AddTrace(err)
+				}
+				finalContext = contextInfo
+			}
+		default:
+			return outputs, errors.AddTrace(fmt.Errorf("%s log service is not registered yet", serviceName))
 		}
-		contextHtml := generateContextHtml(contextInfo)
+
+		contextHtml := generateContextHtml(finalContext)
 		row.Context = &contextHtml
 		outputs = append(outputs, row)
 	}

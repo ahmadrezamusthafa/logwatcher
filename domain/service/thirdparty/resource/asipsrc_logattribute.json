@@ -1,0 +1,58 @@
+[
+  {
+    "attribute": "context.correlationid",
+    "name": "Corelation ID"
+  },
+  {
+    "attribute": "context.providerid",
+    "name": "Provider ID"
+  },
+  {
+    "attribute": "context.event",
+    "name": "Event"
+  },
+  {
+    "attribute": "context.sourcemarket",
+    "name": "Source Market"
+  },
+  {
+    "attribute": "context.checkindate",
+    "name": "Checkin Date"
+  },
+  {
+    "attribute": "context.checkoutdate",
+    "name": "Checkout Date"
+  },
+  {
+    "attribute": "context.locale",
+    "name": "Locale"
+  },
+  {
+    "attribute": "context.currency",
+    "name": "Currency"
+  },
+  {
+    "attribute": "context.noofadult",
+    "name": "No of Adult"
+  },
+  {
+    "attribute": "context.noofchild",
+    "name": "No of Child"
+  },
+  {
+    "attribute": "context.noofroom",
+    "name": "No of Room"
+  },
+  {
+    "attribute": "flowid",
+    "name": "Flow ID"
+  },
+  {
+    "attribute": "type",
+    "name": "Type"
+  },
+  {
+    "attribute": "hostname",
+    "name": "Hostname"
+  }
+]

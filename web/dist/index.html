@@ -39,7 +39,7 @@
           <div class="col-xl-1 col-md-4">
             <div class="form-group">
               <label style="color: white" for="example-datetime-local-input" class="form-control-label">Source</label>
-              <select class="form-control form-control-sm" id="option-service-input">
+              <select class="form-control form-control-sm" id="option-source-input">
                 <option value="DEMAND">Demand</option>
                 <option value="PROVIDER">Provider</option>
               </select>
@@ -224,6 +224,16 @@
     }
 
     $(function () {
+        $("#option-source-input").change(function () {
+            populateAttribute();
+            $('#dynamicTable').empty();
+        });
+
+        $("#option-service-input").change(function () {
+            populateAttribute();
+            $('#dynamicTable').empty();
+        });
+
         $("#btn-search").click(function (e) {
             e.preventDefault();
             var error = validateForm();
@@ -302,6 +312,7 @@
 
     function populateAttribute() {
         attributes = getAttribute();
+        attributeHtml = "";
         $.each(attributes, function (key, data) {
             attributeHtml += "<option value=\"" + data[0] + "\">" + data[1] + "</option>"
         });
@@ -421,9 +432,11 @@
     }
 
     function getAttribute() {
+        var service = $('#option-service-input').val();
+        var source = $('#option-source-input').val();
         var arrayReturn = [];
         $.ajax({
-            url: "http://localhost:9505/attributes",
+            url: "http://localhost:9505/attributes?service=" + service + "&source=" + source,
             async: false,
             type: "GET",
             dataType: 'json',
@@ -459,6 +472,7 @@
         param.message_query = $('#text-message-input').val().trim();
         param.context_query = contextQuery;
         param.limit = limit;
+        param.source = $('#option-source-input').val();
 
         $('#generated-query-input').val("");
         $.ajax({
@@ -499,6 +513,7 @@
         param.message_query = $('#text-message-input').val().trim();
         param.context_query = contextQuery;
         param.limit = limit;
+        param.source = $('#option-source-input').val();
 
         $.ajax({
             url: "http://localhost:9505/query",
@@ -539,7 +554,7 @@
             row.append($('<td></td>').append(data.flowid));
             row.append($('<td></td>').append(data.type));
             row.append($('<td></td>').append(data.part));
-            row.append($('<td>'+data.context+'</td>'));
+            row.append($('<td>' + data.context + '</td>'));
             row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" ' +
                 'data-toggle="tooltip" data-placement="right" title="Copy" class="btn btn-outline-dark btn-sm ni ni-single-copy-04" onclick="copyToClipboard(this)"></button>' +
                 '</td>').append(data.message));

@@ -31,7 +31,7 @@ func (svr *HttpServer) Serve() {
 		commonHandlers.LoggingHandler,
 	)
 
-	logger.Info("Http server is serving on :" + svr.Config.HttpPort)
+	logger.Info("Web is serving on " + "http://localhost:" + svr.Config.HttpPort)
 	err := http.ListenAndServe(":"+svr.Config.HttpPort, middleware.Then(route))
 	if err != nil {
 		logger.Err(err.Error())

@@ -11,7 +11,6 @@ import (
 
 type Config struct {
 	HttpPort                string        `envconfig:"default=9505"`
-	APIHost                 string        `envconfig:"default=http://api.com"`
 	BreakerErrorThreshold   int           `envconfig:"default=3"`
 	BreakerSuccessThreshold int           `envconfig:"default=3"`
 	BreakerTimeout          time.Duration `envconfig:"default=15s"`

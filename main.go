@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/ahmadrezamusthafa/logwatcher/common/di/container"
 	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
 	"github.com/ahmadrezamusthafa/logwatcher/config"
@@ -15,6 +16,13 @@ import (
 
 func main() {
 	logger.SetupLoggerAuto("", "")
+	fmt.Println(`
+   __   ___ ____           __   _____ ___    _    _   __  ____ ___ _   _ ____ ____ 
+  /__\ / __|_  _)   ___   (  ) (  _  ) __)  ( \/\/ ) /__\(_  _) __| )_( | ___|  _ \
+ /(__)\\__ \_)(_   (___)   )(__ )(_)( (_-.   )    ( /(__)\ )(( (__ ) _ ( )__) )   /
+(__)(__|___(____)         (____|_____)___/  (__/\__|__)(__|__)\___|_) (_|____|_)\_)
+
+`)
 
 	conf, err := config.New()
 	if err != nil {

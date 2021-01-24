@@ -1,5 +1,61 @@
 # github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5
 github.com/RackSec/srslog
+# github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210120055745-9e36e6b38739
+github.com/ahmadrezamusthafa/multigenerator
+github.com/ahmadrezamusthafa/multigenerator/querygen
+github.com/ahmadrezamusthafa/multigenerator/shared/consts
+github.com/ahmadrezamusthafa/multigenerator/shared/enums/valuetype
+github.com/ahmadrezamusthafa/multigenerator/shared/types
+github.com/ahmadrezamusthafa/multigenerator/shared/utils
+github.com/ahmadrezamusthafa/multigenerator/structgen
+github.com/ahmadrezamusthafa/multigenerator/validator
+# github.com/aws/aws-sdk-go v1.31.11
+github.com/aws/aws-sdk-go/aws
+github.com/aws/aws-sdk-go/aws/arn
+github.com/aws/aws-sdk-go/aws/awserr
+github.com/aws/aws-sdk-go/aws/awsutil
+github.com/aws/aws-sdk-go/aws/client
+github.com/aws/aws-sdk-go/aws/client/metadata
+github.com/aws/aws-sdk-go/aws/corehandlers
+github.com/aws/aws-sdk-go/aws/credentials
+github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
+github.com/aws/aws-sdk-go/aws/credentials/endpointcreds
+github.com/aws/aws-sdk-go/aws/credentials/processcreds
+github.com/aws/aws-sdk-go/aws/credentials/stscreds
+github.com/aws/aws-sdk-go/aws/csm
+github.com/aws/aws-sdk-go/aws/defaults
+github.com/aws/aws-sdk-go/aws/ec2metadata
+github.com/aws/aws-sdk-go/aws/endpoints
+github.com/aws/aws-sdk-go/aws/request
+github.com/aws/aws-sdk-go/aws/session
+github.com/aws/aws-sdk-go/aws/signer/v4
+github.com/aws/aws-sdk-go/internal/context
+github.com/aws/aws-sdk-go/internal/ini
+github.com/aws/aws-sdk-go/internal/s3err
+github.com/aws/aws-sdk-go/internal/sdkio
+github.com/aws/aws-sdk-go/internal/sdkmath
+github.com/aws/aws-sdk-go/internal/sdkrand
+github.com/aws/aws-sdk-go/internal/sdkuri
+github.com/aws/aws-sdk-go/internal/shareddefaults
+github.com/aws/aws-sdk-go/internal/strings
+github.com/aws/aws-sdk-go/internal/sync/singleflight
+github.com/aws/aws-sdk-go/private/checksum
+github.com/aws/aws-sdk-go/private/protocol
+github.com/aws/aws-sdk-go/private/protocol/eventstream
+github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
+github.com/aws/aws-sdk-go/private/protocol/json/jsonutil
+github.com/aws/aws-sdk-go/private/protocol/jsonrpc
+github.com/aws/aws-sdk-go/private/protocol/query
+github.com/aws/aws-sdk-go/private/protocol/query/queryutil
+github.com/aws/aws-sdk-go/private/protocol/rest
+github.com/aws/aws-sdk-go/private/protocol/restxml
+github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
+github.com/aws/aws-sdk-go/service/athena
+github.com/aws/aws-sdk-go/service/athena/athenaiface
+github.com/aws/aws-sdk-go/service/s3
+github.com/aws/aws-sdk-go/service/s3/internal/arn
+github.com/aws/aws-sdk-go/service/sts
+github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/eapache/go-resiliency v1.2.0
 github.com/eapache/go-resiliency/breaker
 # github.com/facebookgo/inject v0.0.0-20161006174721-cc1aa653e50f
@@ -35,6 +91,8 @@ github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/gorilla/mux v1.7.4
 github.com/gorilla/mux
+# github.com/jmespath/go-jmespath v0.3.0
+github.com/jmespath/go-jmespath
 # github.com/jmoiron/sqlx v1.2.0
 github.com/jmoiron/sqlx
 github.com/jmoiron/sqlx/reflectx
@@ -46,8 +104,6 @@ github.com/justinas/alice
 github.com/leodido/go-urn
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
-# github.com/mattn/go-sqlite3 v1.14.0
-github.com/mattn/go-sqlite3
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742
@@ -63,11 +119,13 @@ github.com/newrelic/go-agent/internal/sysinfo
 github.com/newrelic/go-agent/internal/utilization
 # github.com/satori/go.uuid v1.2.0
 github.com/satori/go.uuid
+# github.com/segmentio/go-athena v0.0.0-20181208004937-dfa5f1818930
+github.com/segmentio/go-athena
 # github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
 # github.com/vrischmann/envconfig v1.2.0
 github.com/vrischmann/envconfig
-# golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
+# golang.org/x/net v0.0.0-20200625001655-4c5254603344
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2

@@ -20,13 +20,14 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.10
 	github.com/justinas/alice v0.0.0-20160910103822-1051eaf52fca
+	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.1.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/newrelic/go-agent v2.7.0+incompatible
 	github.com/satori/go.uuid v1.2.0
 	github.com/segmentio/go-athena v0.0.0-20181208004937-dfa5f1818930
-	github.com/uber/athenadriver v1.1.12
+	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/vrischmann/envconfig v1.2.0
 	golang.org/x/net v0.0.0-20200625001655-4c5254603344
 	golang.org/x/text v0.3.3 // indirect

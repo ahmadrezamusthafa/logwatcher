@@ -21,13 +21,13 @@ func (svc *Service) GetLogAttributes(ctx context.Context, serviceName, sourceNam
 	fileName := ""
 	switch common.ServiceName(serviceName) {
 	case common.ASIPCNT:
-		if common.SourceName(sourceName) == common.DEMAND {
+		if common.TypeName(sourceName) == common.STANDARD {
 			fileName = "asipcnt_logattribute"
 		} else {
 			return attributes, nil
 		}
 	case common.ASIPSRC:
-		if common.SourceName(sourceName) == common.DEMAND {
+		if common.TypeName(sourceName) == common.STANDARD {
 			fileName = "asipsrc_logattribute"
 		} else {
 			fileName = "asipsrc_detail_logattribute"
@@ -47,7 +47,7 @@ func (svc *Service) GetLogAttributes(ctx context.Context, serviceName, sourceNam
 	return attributes, nil
 }
 
-func (svc *Service) GenerateQuery(ctx context.Context, serviceName, sourceName string, query QueryInput, limit int) (generated string, err error) {
+func (svc *Service) GenerateQuery(ctx context.Context, serviceName, typeName string, query QueryInput, limit int) (generated string, err error) {
 	baseConditions := []*types.Condition{}
 	queryContexts := []*types.Condition{}
 	condition := types.Condition{
@@ -74,15 +74,15 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceName, sourceName s
 
 	switch svcName {
 	case common.ASIPCNT:
-		if common.SourceName(sourceName) != common.DEMAND {
-			return "", errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, sourceName))
+		if common.TypeName(typeName) != common.STANDARD {
+			return "", errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, typeName))
 		}
 	case common.ASIPSRC:
 	default:
 		return "", errors.AddTrace(fmt.Errorf("%s log service is not registered yet", serviceName))
 	}
 
-	baseQuery, err := common.GetBaseQuery(serviceName, sourceName)
+	baseQuery, err := common.GetBaseQuery(serviceName, typeName)
 	if err != nil {
 		return "", errors.AddTrace(err)
 	}
@@ -95,8 +95,8 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceName, sourceName s
 	return generatedQuery, nil
 }
 
-func (svc *Service) Query(ctx context.Context, serviceName, sourceName string, query QueryInput, limit int) (outputs []QueryOutput, err error) {
-	generatedQuery, err := svc.GenerateQuery(ctx, serviceName, sourceName, query, limit)
+func (svc *Service) Query(ctx context.Context, serviceName, typeName string, query QueryInput, limit int) (outputs []QueryOutput, err error) {
+	generatedQuery, err := svc.GenerateQuery(ctx, serviceName, typeName, query, limit)
 	if err != nil {
 		return outputs, errors.AddTrace(err)
 	}
@@ -112,7 +112,7 @@ func (svc *Service) Query(ctx context.Context, serviceName, sourceName string, q
 
 		switch svcName {
 		case common.ASIPCNT:
-			if common.SourceName(sourceName) == common.DEMAND {
+			if common.TypeName(typeName) == common.STANDARD {
 				contextInfo := ASIPCNTContext{}
 				err = rows.Scan(
 					&row.Timestamp,
@@ -135,10 +135,10 @@ func (svc *Service) Query(ctx context.Context, serviceName, sourceName string, q
 				}
 				finalContext = contextInfo
 			} else {
-				return outputs, errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, sourceName))
+				return outputs, errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, typeName))
 			}
 		case common.ASIPSRC:
-			if common.SourceName(sourceName) == common.DEMAND {
+			if common.TypeName(typeName) == common.STANDARD {
 				contextInfo := ASIPSRCContext{}
 				err = rows.Scan(
 					&row.Timestamp,

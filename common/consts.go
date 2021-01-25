@@ -8,17 +8,17 @@ import (
 type ServiceName string
 
 const (
-	ASIPCNT          ServiceName = "ASIPCNT"
-	ASIPRSV          ServiceName = "ASIPRSV"
-	ASIPSRC          ServiceName = "ASIPSRC"
-	ASIPSRC_PROVIDER ServiceName = "ASIPSRC_PROVIDER"
+	ASIPCNT        ServiceName = "ASIPCNT"
+	ASIPRSV        ServiceName = "ASIPRSV"
+	ASIPSRC        ServiceName = "ASIPSRC"
+	ASIPSRC_DETAIL ServiceName = "ASIPSRC_DETAIL"
 )
 
-type SourceName string
+type TypeName string
 
 const (
-	DEMAND   SourceName = "DEMAND"
-	PROVIDER SourceName = "PROVIDER"
+	STANDARD TypeName = "STANDARD"
+	DETAIL   TypeName = "DETAIL"
 )
 
 var mapQuery = map[ServiceName]string{
@@ -64,7 +64,7 @@ SELECT
 FROM 
   "s3log"."psrclogrqrs_init"
 `,
-	ASIPSRC_PROVIDER: `
+	ASIPSRC_DETAIL: `
 SELECT 
   timestamp, 
   message, 
@@ -83,15 +83,15 @@ var MapS3Bucket = map[ServiceName]string{
 	ASIPSRC: `asipsrc-logging-775451169198-87365897c857f2cd`,
 }
 
-func GetBaseQuery(serviceName, sourceName string) (string, error) {
-	if SourceName(sourceName) != DEMAND {
-		serviceName += "_" + sourceName
+func GetBaseQuery(serviceName, typeName string) (string, error) {
+	if TypeName(typeName) != STANDARD {
+		serviceName += "_" + typeName
 	}
 	svcName := ServiceName(serviceName)
 	if _, ok := mapQuery[svcName]; ok {
 		return mapQuery[svcName], nil
 	}
-	return "", errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, sourceName))
+	return "", errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, typeName))
 }
 
 func (c ServiceName) ToString() string {

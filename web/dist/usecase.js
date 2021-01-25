@@ -49,7 +49,7 @@ function execCopyToClipboard(txt) {
 }
 
 $(function () {
-    $("#option-source-input").change(function () {
+    $("#option-type-input").change(function () {
         populateAttribute();
         $('#dynamicTable').empty();
     });
@@ -258,7 +258,7 @@ function validateForm() {
 
 function getAttribute() {
     var service = $('#option-service-input').val();
-    var source = $('#option-source-input').val();
+    var source = $('#option-type-input').val();
     var arrayReturn = [];
     $.ajax({
         url: "attributes?service=" + service + "&source=" + source,
@@ -297,7 +297,7 @@ function generateQuery(contextQuery) {
     param.message_query = $('#text-message-input').val().trim();
     param.context_query = contextQuery;
     param.limit = limit;
-    param.source = $('#option-source-input').val();
+    param.type = $('#option-type-input').val();
 
     $('#generated-query-input').val("");
     $.ajax({
@@ -338,7 +338,7 @@ function search(contextQuery) {
     param.message_query = $('#text-message-input').val().trim();
     param.context_query = contextQuery;
     param.limit = limit;
-    param.source = $('#option-source-input').val();
+    param.type = $('#option-type-input').val();
 
     $.ajax({
         url: "query",

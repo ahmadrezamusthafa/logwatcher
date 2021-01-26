@@ -4,8 +4,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5 h1:DA3VaMYgMPGzlKWvKOHjo2sKF6qSPG17O1188vLB/jc=
 github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5/go.mod h1:cDLGBht23g0XQdLjzn6xOGXDkLK182YfINAaZEQLCHQ=
-github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210125225349-8c9abf3abe9f h1:1Erkiie3kQFuAEKKFzdUNGfn/Arfkr2euyoOnlZJGlg=
-github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210125225349-8c9abf3abe9f/go.mod h1:YBNbTqWYdY0JZKh70rPTRQ/FPgBD9/eDQM9LPOlzDvc=
+github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210126030749-3133eb59d4f0 h1:PB63FzXZdUwUdLMaW18DjzS3d0OyYhIgf2ZayF860XM=
+github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210126030749-3133eb59d4f0/go.mod h1:YBNbTqWYdY0JZKh70rPTRQ/FPgBD9/eDQM9LPOlzDvc=
 github.com/andybalholm/cascadia v1.1.0/go.mod h1:GsXiBklL0woXo1j/WYWtSYYC4ouU9PqHO0sqidkEA4Y=
 github.com/aws/aws-sdk-go v1.31.11 h1:Uz7VGg3giOV9Z4SlLdXO6RHafArHbK59vSc6mnzYjGU=
 github.com/aws/aws-sdk-go v1.31.11/go.mod h1:5zCpMtNQVjRREroY7sYe8lOMRSxkhG6MZveU8YkpAk0=

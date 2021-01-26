@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5
-	github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210120055745-9e36e6b38739
+	github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210125225349-8c9abf3abe9f
 	github.com/aws/aws-sdk-go v1.31.11
 	github.com/eapache/go-resiliency v1.2.0
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect

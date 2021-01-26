@@ -116,7 +116,12 @@ $(function () {
             html += '<td><select name="item_logical_operator[]" class="form-control form-control-sm item_logical_operator" style="display:' + display + '"><option value="&&"  selected="selected">AND</option>\n' +
                 '<option value="||">OR</option></select></td>';
             html += '<td><select name="item_attribute[]" class="form-control form-control-sm item_attribute">' + attributeHtml + '</select></td>';
-            html += '<td><select name="item_operator[]" class="form-control form-control-sm item_operator"><option value="="  selected="selected">Equal</option></select></td>';
+            html += '<td><select name="item_operator[]" class="form-control form-control-sm item_operator">' +
+                '<option value="=" selected="selected">Equal</option>' +
+                '<option value=">">Greater than</option>' +
+                '<option value=">=">Greater than or eq</option>' +
+                '<option value="<">Less than</option>' +
+                '<option value="<=">Less than or eq</option></select></td>';
             html += '<td><input type="text" name="item_value[]" class="form-control form-control-sm item_value" /></td>';
             html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>Remove</button></td></tr>';
             $table.append(html);

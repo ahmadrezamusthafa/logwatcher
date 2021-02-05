@@ -41,7 +41,7 @@ func (svr *HttpServer) Serve() {
 func createRouter(rh *RootHandler) *gin.Engine {
 	router := gin.Default()
 
-	router.Use(static.Serve("/", static.LocalFile("./web/dist", true)))
+	router.Use(static.Serve("/", static.LocalFile("./web", true)))
 	router.GET("/health", rh.Health.HealthCheck)
 
 	router.POST("/generate_query", rh.ThirdParty.GenerateQuery)

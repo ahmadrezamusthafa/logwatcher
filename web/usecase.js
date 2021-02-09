@@ -194,7 +194,7 @@ function buildQuery() {
         if (i < 10) {
             strTime = "0" + i;
         }
-        contextQueries.push("datekey=" + startDate.replaceAll("-", "") + strTime);
+        contextQueries.push("datekey=\"" + startDate.replaceAll("-", "") + strTime + "\"");
         if (i === endTime) {
             contextQueries.push(")");
         }

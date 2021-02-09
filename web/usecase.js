@@ -1,5 +1,6 @@
 var attributes;
 var attributeHtml;
+var attributeTypeMap;
 $(document).ready(function () {
     $('input[type=datetime-local]').val(new Date().toJSON().slice(0, 16));
 
@@ -143,8 +144,10 @@ $(function () {
 function populateAttribute() {
     attributes = getAttribute();
     attributeHtml = "";
+    attributeTypeMap = new Map();
     $.each(attributes, function (key, data) {
         attributeHtml += "<option value=\"" + data[0] + "\">" + data[1] + "</option>"
+        attributeTypeMap.set(data[0], data[2]);
     });
 }
 
@@ -214,6 +217,9 @@ function buildQuery() {
             if (!isFirst) {
                 combination += " " + itemLogicalOperator;
             }
+            if (attributeTypeMap.get(itemAttribute) === "alphanumeric") {
+                itemValue = "\"" + itemValue + "\"";
+            }
             combination += " " + itemAttribute + itemOperator + itemValue;
             isContain = true;
             isFirst = false;
@@ -279,6 +285,7 @@ function getAttribute() {
                                 arrayReturn.push([
                                     object.attribute,
                                     object.name,
+                                    object.type
                                 ]);
                                 return false;
                             });
@@ -375,9 +382,6 @@ function setDataTable(data) {
     var htmlResult = [];
     $.each(data, function (i, data) {
         data.message = data.message.replaceAll(/<br\/>|<p>|<\/p>|<br>/g, " ");
-
-        var contextValue = JSON.stringify(data.context);
-
         var row = $(document.createElement("tr"));
         row.append($('<td></td>').append(data.timestamp));
         row.append($('<td></td>').append(data.hostname));

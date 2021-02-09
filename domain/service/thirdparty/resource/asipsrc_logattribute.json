@@ -1,58 +1,72 @@
 [
   {
     "attribute": "context.correlationid",
-    "name": "Corelation ID"
+    "name": "Corelation ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.providerid",
-    "name": "Provider ID"
+    "name": "Provider ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.event",
-    "name": "Event"
+    "name": "Event",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.sourcemarket",
-    "name": "Source Market"
+    "name": "Source Market",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.checkindate",
-    "name": "Checkin Date"
+    "name": "Checkin Date",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.checkoutdate",
-    "name": "Checkout Date"
+    "name": "Checkout Date",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.locale",
-    "name": "Locale"
+    "name": "Locale",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.currency",
-    "name": "Currency"
+    "name": "Currency",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.noofadult",
-    "name": "No of Adult"
+    "name": "No of Adult",
+    "type": "numeric"
   },
   {
     "attribute": "context.noofchild",
-    "name": "No of Child"
+    "name": "No of Child",
+    "type": "numeric"
   },
   {
     "attribute": "context.noofroom",
-    "name": "No of Room"
+    "name": "No of Room",
+    "type": "numeric"
   },
   {
     "attribute": "flowid",
-    "name": "Flow ID"
+    "name": "Flow ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "type",
-    "name": "Type"
+    "name": "Type",
+    "type": "alphanumeric"
   },
   {
     "attribute": "hostname",
-    "name": "Hostname"
+    "name": "Hostname",
+    "type": "alphanumeric"
   }
 ]

@@ -1,46 +1,57 @@
 [
   {
     "attribute": "context.correlationid",
-    "name": "Corelation ID"
+    "name": "Corelation ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.event",
-    "name": "Event"
+    "name": "Event",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.uri",
-    "name": "URI"
+    "name": "URI",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.providerid",
-    "name": "Provider ID"
+    "name": "Provider ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.providerhotelid",
-    "name": "Provider Hotel ID"
+    "name": "Provider Hotel ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.locale",
-    "name": "Locale"
+    "name": "Locale",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.providerbrandid",
-    "name": "Provider Brand ID"
+    "name": "Provider Brand ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "context.providerchainid",
-    "name": "Provider Chain ID"
+    "name": "Provider Chain ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "flowid",
-    "name": "Flow ID"
+    "name": "Flow ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "type",
-    "name": "Type"
+    "name": "Type",
+    "type": "alphanumeric"
   },
   {
     "attribute": "hostname",
-    "name": "Hostname"
+    "name": "Hostname",
+    "type": "alphanumeric"
   }
 ]

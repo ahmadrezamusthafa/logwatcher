@@ -5,9 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/ahmadrezamusthafa/logwatcher/common"
-	"github.com/ahmadrezamusthafa/logwatcher/common/errors"
-	"github.com/ahmadrezamusthafa/logwatcher/common/util"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/errors"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/util"
+	"github.com/ahmadrezamusthafa/logwatcher/shared"
 	"github.com/ahmadrezamusthafa/multigenerator"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/consts"
 	"github.com/ahmadrezamusthafa/multigenerator/shared/enums/valuetype"
@@ -19,15 +19,15 @@ import (
 
 func (svc *Service) GetLogAttributes(ctx context.Context, serviceName, sourceName string) (attributes []LogAttribute, err error) {
 	fileName := ""
-	switch common.ServiceName(serviceName) {
-	case common.ASIPCNT:
-		if common.TypeName(sourceName) == common.STANDARD {
+	switch shared.ServiceName(serviceName) {
+	case shared.ASIPCNT:
+		if shared.TypeName(sourceName) == shared.STANDARD {
 			fileName = "asipcnt_logattribute"
 		} else {
 			return attributes, nil
 		}
-	case common.ASIPSRC:
-		if common.TypeName(sourceName) == common.STANDARD {
+	case shared.ASIPSRC:
+		if shared.TypeName(sourceName) == shared.STANDARD {
 			fileName = "asipsrc_logattribute"
 		} else {
 			fileName = "asipsrc_detail_logattribute"
@@ -65,24 +65,24 @@ func (svc *Service) GenerateQuery(ctx context.Context, serviceName, typeName str
 	queryContexts = append(queryContexts, &condition)
 	baseConditions = append(baseConditions, queryContexts...)
 	if limit <= 0 {
-		limit = common.DEFAULT_LIMIT
+		limit = shared.DEFAULT_LIMIT
 	}
 	baseCondition := types.BaseCondition{
 		Conditions: baseConditions,
 	}
-	svcName := common.ServiceName(serviceName)
+	svcName := shared.ServiceName(serviceName)
 
 	switch svcName {
-	case common.ASIPCNT:
-		if common.TypeName(typeName) != common.STANDARD {
+	case shared.ASIPCNT:
+		if shared.TypeName(typeName) != shared.STANDARD {
 			return "", errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, typeName))
 		}
-	case common.ASIPSRC:
+	case shared.ASIPSRC:
 	default:
 		return "", errors.AddTrace(fmt.Errorf("%s log service is not registered yet", serviceName))
 	}
 
-	baseQuery, err := common.GetBaseQuery(serviceName, typeName)
+	baseQuery, err := shared.GetBaseQuery(serviceName, typeName)
 	if err != nil {
 		return "", errors.AddTrace(err)
 	}
@@ -101,7 +101,7 @@ func (svc *Service) Query(ctx context.Context, serviceName, typeName string, que
 		return outputs, errors.AddTrace(err)
 	}
 	fmt.Println(generatedQuery)
-	svcName := common.ServiceName(serviceName)
+	svcName := shared.ServiceName(serviceName)
 	rows, err := svc.DB.GetDB(svcName).Query(generatedQuery)
 	if err != nil {
 		return outputs, errors.AddTrace(err)
@@ -111,8 +111,8 @@ func (svc *Service) Query(ctx context.Context, serviceName, typeName string, que
 		var finalContext interface{}
 
 		switch svcName {
-		case common.ASIPCNT:
-			if common.TypeName(typeName) == common.STANDARD {
+		case shared.ASIPCNT:
+			if shared.TypeName(typeName) == shared.STANDARD {
 				contextInfo := ASIPCNTContext{}
 				err = rows.Scan(
 					&row.Timestamp,
@@ -137,8 +137,8 @@ func (svc *Service) Query(ctx context.Context, serviceName, typeName string, que
 			} else {
 				return outputs, errors.AddTrace(fmt.Errorf("%s service doesn't have %s log", serviceName, typeName))
 			}
-		case common.ASIPSRC:
-			if common.TypeName(typeName) == common.STANDARD {
+		case shared.ASIPSRC:
+			if shared.TypeName(typeName) == shared.STANDARD {
 				contextInfo := ASIPSRCContext{}
 				err = rows.Scan(
 					&row.Timestamp,
@@ -209,6 +209,7 @@ func getTokenAttributes(query string) []*types.TokenAttribute {
 	buffer := &bytes.Buffer{}
 	isQuoteFound := false
 	isOpenQuote := false
+	isOpenChar := false
 	for _, char := range query {
 		switch char {
 		case ' ', '\n', '\'':
@@ -217,9 +218,16 @@ func getTokenAttributes(query string) []*types.TokenAttribute {
 			} else {
 				buffer.WriteRune(char)
 			}
+		case '\\':
+			isOpenChar = !isOpenChar
 		case '"':
-			isQuoteFound = true
-			isOpenQuote = !isOpenQuote
+			if !isOpenChar {
+				isQuoteFound = true
+				isOpenQuote = !isOpenQuote
+			} else {
+				buffer.WriteRune(char)
+				isOpenChar = false
+			}
 		default:
 			buffer.WriteRune(char)
 		}

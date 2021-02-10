@@ -1,5 +1,9 @@
 package thirdparty
 
+import (
+	"github.com/ahmadrezamusthafa/multigenerator/shared/enums/valuetype"
+)
+
 type QueryInput struct {
 	MessageQuery string
 	ContextQuery string
@@ -46,6 +50,7 @@ type ASIPSRCDetailContext struct {
 }
 
 type LogAttribute struct {
-	Attribute string `json:"attribute"`
-	Name      string `json:"name"`
+	Attribute string              `json:"attribute"`
+	Name      string              `json:"name"`
+	Type      valuetype.ValueType `json:"type"`
 }

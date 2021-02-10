@@ -4,15 +4,13 @@ go 1.13
 
 require (
 	github.com/RackSec/srslog v0.0.0-20170106171028-a974ba6f7fb5
-	github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210126030749-3133eb59d4f0
-	github.com/aws/aws-sdk-go v1.31.11
-	github.com/eapache/go-resiliency v1.2.0
+	github.com/ahmadrezamusthafa/multigenerator v0.0.0-20210209133930-44d400c5756f
+	github.com/aws/aws-sdk-go v1.31.11 // indirect
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/inject v0.0.0-20161006174721-cc1aa653e50f
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 // indirect
 	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
-	github.com/gammazero/workerpool v0.0.0-20191211212902-79f70a4b5331
 	github.com/gin-contrib/static v0.0.0-20191128031702-f81c604d8ac2
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang/protobuf v1.4.2 // indirect

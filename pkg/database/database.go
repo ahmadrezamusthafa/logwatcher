@@ -2,9 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"github.com/ahmadrezamusthafa/logwatcher/common"
-	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
 	"github.com/ahmadrezamusthafa/logwatcher/config"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/logger"
+	"github.com/ahmadrezamusthafa/logwatcher/shared"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/segmentio/go-athena"
 )
@@ -18,17 +18,17 @@ type Block func(db *sqlx.Tx, c chan Result)
 
 type Database struct {
 	Config config.Config `inject:"config"`
-	dbMap  map[common.ServiceName]*sql.DB
+	dbMap  map[shared.ServiceName]*sql.DB
 }
 
-func (m Database) GetDB(svcName common.ServiceName) *sql.DB {
+func (m Database) GetDB(svcName shared.ServiceName) *sql.DB {
 	if _, ok := m.dbMap[svcName]; ok {
 		return m.dbMap[svcName]
 	}
 	return nil
 }
 
-func (m Database) QueryRow(svcName common.ServiceName, query string, args ...interface{}) *sql.Row {
+func (m Database) QueryRow(svcName shared.ServiceName, query string, args ...interface{}) *sql.Row {
 	return m.GetDB(svcName).QueryRow(query, args)
 }
 
@@ -59,8 +59,8 @@ func (m *EngineDatabase) Shutdown() {
 func (m *EngineDatabase) StartUp() {
 	logger.Info("Init database connection...")
 
-	m.dbMap = make(map[common.ServiceName]*sql.DB)
-	for svcName, bucket := range common.MapS3Bucket {
+	m.dbMap = make(map[shared.ServiceName]*sql.DB)
+	for svcName, bucket := range shared.MapS3Bucket {
 		db, err := sql.Open("athena", "db=s3log&region=ap-southeast-1&output_location=s3://"+bucket+"/QUERY_OUTPUT/")
 		if err != nil {
 			logger.Warn("Failed to connect [%s]", bucket)

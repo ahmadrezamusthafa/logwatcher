@@ -89,6 +89,34 @@ func Test_getTokenAttributes(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Normal case",
+			args: args{
+				query: `"\"1234"`,
+			},
+			want: []*types.TokenAttribute{
+				{
+					Value: `"1234`,
+				},
+			},
+		},
+		{
+			name: "Normal case",
+			args: args{
+				query: `"\"1234\"" "expedia" "\"12:00"`,
+			},
+			want: []*types.TokenAttribute{
+				{
+					Value: `"1234"`,
+				},
+				{
+					Value: `expedia`,
+				},
+				{
+					Value: `"12:00`,
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

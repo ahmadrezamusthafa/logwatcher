@@ -1,18 +1,22 @@
 [
   {
     "attribute": "context.correlationid",
-    "name": "Corelation ID"
+    "name": "Corelation ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "flowid",
-    "name": "Flow ID"
+    "name": "Flow ID",
+    "type": "alphanumeric"
   },
   {
     "attribute": "type",
-    "name": "Type"
+    "name": "Type",
+    "type": "alphanumeric"
   },
   {
     "attribute": "hostname",
-    "name": "Hostname"
+    "name": "Hostname",
+    "type": "alphanumeric"
   }
 ]

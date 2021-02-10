@@ -1,8 +1,8 @@
 package thirdparty
 
 import (
-	"github.com/ahmadrezamusthafa/logwatcher/common/errors"
-	"github.com/ahmadrezamusthafa/logwatcher/common/respwriter"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/errors"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/respwriter"
 	"github.com/ahmadrezamusthafa/logwatcher/config"
 	"github.com/ahmadrezamusthafa/logwatcher/domain/service/thirdparty"
 	"github.com/gin-gonic/gin"

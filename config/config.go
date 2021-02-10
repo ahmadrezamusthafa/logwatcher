@@ -1,21 +1,15 @@
 package config
 
 import (
-	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/logger"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/vrischmann/envconfig"
 	"io/ioutil"
 	"os"
-	"time"
 )
 
 type Config struct {
-	HttpPort                string        `envconfig:"default=9505"`
-	BreakerErrorThreshold   int           `envconfig:"default=3"`
-	BreakerSuccessThreshold int           `envconfig:"default=3"`
-	BreakerTimeout          time.Duration `envconfig:"default=15s"`
-	HttpClientTimeout       time.Duration `envconfig:"default=15s"`
-	MaxWorkerPool           int           `envconfig:"default=100"`
+	HttpPort string `envconfig:"default=9505"`
 }
 
 func readFromFileAndEnv(conf interface{}) (err error) {

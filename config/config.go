@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/logger"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/vrischmann/envconfig"
 	"io/ioutil"

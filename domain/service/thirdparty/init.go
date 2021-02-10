@@ -1,8 +1,8 @@
 package thirdparty
 
 import (
-	"github.com/ahmadrezamusthafa/logwatcher/config"
 	"github.com/ahmadrezamusthafa/logwatcher/pkg/database"
+	"github.com/ahmadrezamusthafa/logwatcher/config"
 )
 
 type Service struct {

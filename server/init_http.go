@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/ahmadrezamusthafa/logwatcher/common/commonhandlers"
-	"github.com/ahmadrezamusthafa/logwatcher/common/logger"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/commonhandlers"
+	"github.com/ahmadrezamusthafa/logwatcher/pkg/logger"
 	"github.com/ahmadrezamusthafa/logwatcher/config"
 	"github.com/ahmadrezamusthafa/logwatcher/server/http/health"
 	"github.com/ahmadrezamusthafa/logwatcher/server/http/thirdparty"

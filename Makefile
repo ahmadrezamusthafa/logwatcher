@@ -1,6 +1,6 @@
 build:
 	@echo "Building binary file" && \
-	go build -o logwatcher main.go && \
+	go build -o ./dist/logwatcher main.go && \
 	echo "Done"
 
 SYMLINK = /mnt/c/Users/Reza/go
@@ -10,5 +10,5 @@ SYMLINK = /mnt/c/Users/Reza/go
 
 build_windows:
 	@echo "Building binary file" && \
-	env GOOS=windows GOARCH=386 go build -o logwatcher.exe main.go && \
+	env GOOS=windows GOARCH=386 go build -o ./dist/logwatcher.exe main.go && \
 	echo "Done"

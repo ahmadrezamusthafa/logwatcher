@@ -1,6 +1,6 @@
 # ASI-Log Watcher
 ##### S3 log viewer (local version)
-![plot](./web/assets/img/screenshot.jpg)
+![plot](dist/web/assets/img/screenshot.jpg)
 > Screenshot above will generate and execute query like this
 ```
 SELECT 
@@ -72,6 +72,10 @@ make build_windows              # this cmd will generate logwatcher.exe binary
 ```
 
 ### How to run?
+1. Open your terminal or command prompt
+2. Go to `dist` folder. `# you can copy and paste this folder wherever you want`
+3. Then execute this cmd :
+
 **Linux**
 ```
 awsudo -u ReadOnly@tvlk-asi-prod -- ./logwatcher

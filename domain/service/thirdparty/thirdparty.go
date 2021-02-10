@@ -209,6 +209,7 @@ func getTokenAttributes(query string) []*types.TokenAttribute {
 	buffer := &bytes.Buffer{}
 	isQuoteFound := false
 	isOpenQuote := false
+	isOpenChar := false
 	for _, char := range query {
 		switch char {
 		case ' ', '\n', '\'':
@@ -217,9 +218,16 @@ func getTokenAttributes(query string) []*types.TokenAttribute {
 			} else {
 				buffer.WriteRune(char)
 			}
+		case '\\':
+			isOpenChar = !isOpenChar
 		case '"':
-			isQuoteFound = true
-			isOpenQuote = !isOpenQuote
+			if !isOpenChar {
+				isQuoteFound = true
+				isOpenQuote = !isOpenQuote
+			} else {
+				buffer.WriteRune(char)
+				isOpenChar = false
+			}
 		default:
 			buffer.WriteRune(char)
 		}

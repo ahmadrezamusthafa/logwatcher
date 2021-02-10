@@ -1,16 +1,14 @@
-var attributes;
-var attributeHtml;
-var attributeTypeMap;
+let attributes;
+let attributeHtml;
+let attributeTypeMap;
 $(document).ready(function () {
     $('input[type=datetime-local]').val(new Date().toJSON().slice(0, 16));
 
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
+    let coll = document.getElementsByClassName("collapsible");
+    for (let i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
-            var content = this.nextElementSibling;
+            let content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";
             } else {
@@ -31,14 +29,13 @@ $(document).ajaxStart(function () {
 });
 
 function copyToClipboard(e) {
-    var leftTdIndex = $(e).parent().index() - 1;
-    var leftTd = $(e).closest("tr").find("td:eq(" + leftTdIndex + ")");
-    execCopyToClipboard($(leftTd).text());
+    let rightTdIndex = $(e).parent().index() + 1;
+    let rightTd = $(e).closest("tr").find("td:eq(" + rightTdIndex + ")");
+    execCopyToClipboard($(rightTd).text());
 }
 
 function execCopyToClipboard(txt) {
-    var el = document.createElement('textarea');
-
+    let el = document.createElement('textarea');
     el.value = txt;
     el.setAttribute('readonly', '');
     el.style.position = 'absolute';
@@ -62,11 +59,10 @@ $(function () {
 
     $("#btn-search").click(function (e) {
         e.preventDefault();
-        var error = validateForm();
-        var form_data = $(this).serialize();
+        let error = validateForm();
         if (error === '') {
             $('#error').html('<div class=""></div>');
-            var query = buildQuery();
+            let query = buildQuery();
             if (query !== "") {
                 search(query);
             }
@@ -77,10 +73,10 @@ $(function () {
 
     $("#btn-generate-query").click(function (e) {
         e.preventDefault();
-        var error = validateForm();
+        let error = validateForm();
         if (error === '') {
             $('#error').html('<div class=""></div>');
-            var query = buildQuery();
+            let query = buildQuery();
             if (query !== "") {
                 generateQuery(query);
             }
@@ -91,28 +87,34 @@ $(function () {
 
     $("#btn-new-group").click(function (e) {
         e.preventDefault();
-        var $table = $('<table class="table item_table" id="item_table[]" style="margin-top: 5px">');
-        var $tbody = $table.append('<tbody />').children('tbody');
+        let $table = $('<table class="table item_table" id="item_table[]" style="margin-top: 5px">');
+        let $tbody = $table.append('<tbody />').children('tbody');
+        let $tfoot = $table.append('<tfoot />').children('tfoot');
 
         $tbody
-            .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-danger btn-sm remove_group\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete context group\"><span class=\"btn-inner--icon\"><i class=\"ni ni-fat-delete\"></i></span></button></th>")
             .append("<th><select name=\"item_group_logical_operator[]\" class=\"form-control form-control-sm item_group_logical_operator\"><option value=\"&&\"  selected=\"selected\">AND</option>\\n' +\n" +
                 "'<option value=\"||\">OR</option></select></th>")
             .append("<th>Logical</th>")
             .append("<th>Attribute</th>")
             .append("<th>Operator</th>")
             .append("<th>Value</th>")
-            .append("<th><button type=\"button\" name=\"add\" class=\"btn btn-success btn-sm add\"><span class=\"glyphicon glyphicon-plus\"></span> Add attribute</button></th>");
+            .append("<th></th>");
+
+        $tfoot
+            .append("<th></th>")
+            .append("<th></th>")
+            .append("<th colspan=\"3\"><button type=\"button\" name=\"add\" class=\"btn btn-success btn-sm add btn-block\"><span class=\"glyphicon glyphicon-plus\"></span> Add attribute</button></th>")
+            .append("<th><button type=\"button\" name=\"remove_group\" class=\"btn btn-warning btn-sm remove_group btn-block\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete context group\"><span class=\"btn-inner--icon\"></span>Remove context group</button></th>");
+
 
         $table.on('click', '.add', function () {
-            var display = "none";
+            let display = "none";
             if ($tbody[0].rows.length > 0) {
                 display = "block";
             }
 
-            var html = '';
+            let html = '';
             html += '<tr>';
-            html += '<td></td>';
             html += '<td></td>';
             html += '<td><select name="item_logical_operator[]" class="form-control form-control-sm item_logical_operator" style="display:' + display + '"><option value="&&"  selected="selected">AND</option>\n' +
                 '<option value="||">OR</option></select></td>';
@@ -124,7 +126,7 @@ $(function () {
                 '<option value="<">Less than</option>' +
                 '<option value="<=">Less than or eq</option></select></td>';
             html += '<td><input type="text" name="item_value[]" class="form-control form-control-sm item_value" /></td>';
-            html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>Remove</button></td></tr>';
+            html += '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span></button></td></tr>';
             $table.append(html);
         });
 
@@ -152,17 +154,13 @@ function populateAttribute() {
 }
 
 function buildQuery() {
-    var startTimestamp = $('#start-datetime-input').val();
-    var endTimestamp = $('#end-datetime-input').val();
+    let startTimestamp = $('#start-datetime-input').val();
+    let endTimestamp = $('#end-datetime-input').val();
+    let starts = startTimestamp.split("T");
+    let ends = endTimestamp.split("T");
 
-    console.log(startTimestamp);
-    console.log(endTimestamp);
-
-    var starts = startTimestamp.split("T");
-    var ends = endTimestamp.split("T");
-
-    var startDate, endDate;
-    var startTime, endTime;
+    let startDate, endDate;
+    let startTime, endTime;
     if (starts.length >= 2) {
         startDate = starts[0];
         startTime = parseInt(starts[1].split(":")[0]);
@@ -181,16 +179,16 @@ function buildQuery() {
         return "";
     }
 
-    var contextQueries = [];
-    var isFirstDateKey = true;
-    for (var i = startTime; i <= endTime; i++) {
+    let contextQueries = [];
+    let isFirstDateKey = true;
+    for (let i = startTime; i <= endTime; i++) {
         if (i === startTime) {
             contextQueries.push("(");
         }
         if (!isFirstDateKey) {
             contextQueries.push("||");
         }
-        var strTime = "" + i;
+        let strTime = "" + i;
         if (i < 10) {
             strTime = "0" + i;
         }
@@ -205,15 +203,15 @@ function buildQuery() {
     contextQueries.push("&& timestamp<=\"" + endTimestamp + "\"");
 
     $('.item_table').each(function () {
-        var groupLogicalOperator = $(this).find('th .item_group_logical_operator').val();
-        var isContain = false;
-        var isFirst = true;
-        var combination = "";
+        let groupLogicalOperator = $(this).find('th .item_group_logical_operator').val();
+        let isContain = false;
+        let isFirst = true;
+        let combination = "";
         $(this).find('tr').each(function (i, row) {
-            var itemLogicalOperator = $(row).find('.item_logical_operator').val();
-            var itemAttribute = $(row).find('.item_attribute').val();
-            var itemOperator = $(row).find('.item_operator').val();
-            var itemValue = $(row).find('.item_value').val().trim();
+            let itemLogicalOperator = $(row).find('.item_logical_operator').val();
+            let itemAttribute = $(row).find('.item_attribute').val();
+            let itemOperator = $(row).find('.item_operator').val();
+            let itemValue = $(row).find('.item_value').val().trim();
             if (!isFirst) {
                 combination += " " + itemLogicalOperator;
             }
@@ -231,46 +229,40 @@ function buildQuery() {
         }
     });
 
-    var query = contextQueries.join(" ");
+    let query = contextQueries.join(" ");
     console.log("QUERY = " + query);
     return query;
 }
 
 function validateForm() {
-    var error = '';
-    $('.item_logical_operator').each(function () {
-        var count = 1;
+    let error = '';
+    $('.item_logical_operator').each(function (i, data) {
         if ($(this).val() === '') {
-            error += "<p>Select logical operator at " + count + " row</p>";
+            error += "<p>Select logical operator at " + (i + 1) + " row</p>";
             return false;
         }
-        count = count + 1;
     });
 
-    $('.item_attribute').each(function () {
-        var count = 1;
+    $('.item_attribute').each(function (i, data) {
         if ($(this).val() === '') {
-            error += "<p>Select attribute at " + count + " row</p>";
+            error += "<p>Select attribute at " + (i + 1) + " row</p>";
             return false;
         }
-        count = count + 1;
     });
 
-    $('.item_value').each(function () {
-        var count = 1;
+    $('.item_value').each(function (i, data) {
         if ($(this).val() === '') {
-            error += "<p>Enter value at " + count + " row</p>";
+            error += "<p>Enter value at " + (i + 1) + " row</p>";
             return false;
         }
-        count = count + 1;
     });
     return error;
 }
 
 function getAttribute() {
-    var service = $('#option-service-input').val();
-    var source = $('#option-type-input').val();
-    var arrayReturn = [];
+    let service = $('#option-service-input').val();
+    let source = $('#option-type-input').val();
+    let arrayReturn = [];
     $.ajax({
         url: "attributes?service=" + service + "&source=" + source,
         async: false,
@@ -302,9 +294,8 @@ function generateQuery(contextQuery) {
     if ($('#start-datetime-input').val() === "" || $('#end-datetime-input').val() === "" || $('#option-service-input').val() === "") {
         swal("Warning", "You must complete the data", "warning");
     }
-    var limit = parseInt($('#option-limit-input').val());
-
-    var param = new Object();
+    let limit = parseInt($('#option-limit-input').val());
+    let param = {};
     param.service = $('#option-service-input').val();
     param.message_query = $('#text-message-input').val().trim();
     param.context_query = contextQuery;
@@ -323,7 +314,8 @@ function generateQuery(contextQuery) {
             if (response !== null) {
                 console.log(response);
                 if (response.success) {
-                    $("#modal-default .modal-body").text(response.data);
+                    $("#modal-default .modal-title").text("Generated query");
+                    $("#modal-default .modal-body").html("<code>" + response.data + "</code>");
                     $('#modal-default').modal();
                 } else {
                     swal("Oops", response.error, "error");
@@ -343,9 +335,8 @@ function search(contextQuery) {
     if ($('#start-datetime-input').val() === "" || $('#end-datetime-input').val() === "" || $('#option-service-input').val() === "") {
         swal("Warning", "You must complete the data", "warning");
     }
-    var limit = parseInt($('#option-limit-input').val());
-
-    var param = new Object();
+    let limit = parseInt($('#option-limit-input').val());
+    let param = {};
     param.service = $('#option-service-input').val();
     param.message_query = $('#text-message-input').val().trim();
     param.context_query = contextQuery;
@@ -372,26 +363,30 @@ function search(contextQuery) {
             }
         },
         error: function (xhr, status, error) {
-            var err = JSON.parse(xhr.responseText);
+            let err = JSON.parse(xhr.responseText);
             swal("Oops", err.error.message, "error");
         }
     });
 }
 
 function setDataTable(data) {
-    var htmlResult = [];
+    let htmlResult = [];
     $.each(data, function (i, data) {
         data.message = data.message.replaceAll(/<br\/>|<p>|<\/p>|<br>/g, " ");
-        var row = $(document.createElement("tr"));
+        let row = $(document.createElement("tr"));
         row.append($('<td></td>').append(data.timestamp));
         row.append($('<td></td>').append(data.hostname));
         row.append($('<td></td>').append(data.flowid));
         row.append($('<td></td>').append(data.type));
-        row.append($('<td></td>').append(data.part));
-        row.append($('<td>' + data.context + '</td>'));
-        row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div><button type="button" style="margin-bottom: 5px" ' +
-            'data-toggle="tooltip" data-placement="right" title="Copy" class="btn btn-outline-dark btn-sm ni ni-single-copy-04" onclick="copyToClipboard(this)"></button>' +
-            '</td>').append(data.message));
+        row.append("<td><button type=\"button\" name=\"btn-show-context\" class=\"btn btn-secondary btn-sm btn-show-context \"><span class=\"btn-inner--icon\"></span>Show context</button>" +
+            "<button type=\"button\" class=\"btn btn-info btn-sm\" onclick=\"copyToClipboard(this)\">Copy</button></td>");
+        row.append($('<td style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;"><div></td>').append(data.message));
+
+        row.on('click', '.btn-show-context', function () {
+            $("#modal-default .modal-title").text("Available context");
+            $("#modal-default .modal-body").html(data.context);
+            $('#modal-default').modal();
+        });
 
         htmlResult.push(row);
     });

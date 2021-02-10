@@ -1,7 +1,45 @@
 # ASI-Log Watcher
 ##### S3 log viewer (local version)
 ![plot](./web/assets/img/screenshot.jpg)
-
+> Screenshot above will generate and execute query like this
+```
+SELECT 
+  timestamp, 
+  message, 
+  flowid, 
+  type, 
+  hostname, 
+  part, 
+  context.correlationid, 
+  context.providerid, 
+  context.event, 
+  context.sourcemarket, 
+  context.checkindate, 
+  context.checkoutdate, 
+  context.locale, 
+  context.currency, 
+  context.noofadult, 
+  context.noofchild, 
+  context.noofroom 
+FROM 
+  "s3log"."psrclogrqrs_init" 
+WHERE 
+  datekey = '2021020901' 
+  AND timestamp >= '2021-02-09T01:21' 
+  AND timestamp <= '2021-02-09T01:45' 
+  AND (
+    context.checkindate = '2021-02-09' 
+    AND context.checkoutdate = '2021-02-10' 
+    AND context.noofadult = 1
+  ) 
+  AND (
+    context.locale = 'en_SG' 
+    OR context.locale = 'en_AU'
+  ) 
+  AND message LIKE '%expedia%' 
+LIMIT 
+  50
+```
 ### Prerequisites
 Go `1.13+` to build a binary
 

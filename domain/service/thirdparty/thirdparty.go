@@ -36,7 +36,7 @@ func (svc *Service) GetLogAttributes(ctx context.Context, serviceName, sourceNam
 		return attributes, nil
 	}
 
-	data, err := ioutil.ReadFile("domain/service/thirdparty/resource/" + fileName + ".json")
+	data, err := ioutil.ReadFile("res/" + fileName + ".json")
 	if err != nil {
 		return attributes, errors.AddTrace(err)
 	}
